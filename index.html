@@ -7,9 +7,163 @@
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
     rel="stylesheet">
   <style>
+    /* ── THEME VARIABLES ── */
+    :root {
+      --maroon: #6B0F1A;
+      --maroon-dark: #4A0A12;
+      --maroon-deep: #2D0609;
+      --maroon-light: #8B1A28;
+      --maroon-soft: #B5293A;
+      --maroon-muted: #F5E8EA;
+      --maroon-tint: #FDF2F3;
+      --gold: #C9A84C;
+      --gold-light: #E2C675;
+      --gold-pale: #FBF5E0;
+      --cream: #FAF7F2;
+      --white: #FFFFFF;
+      --text-dark: #1A0608;
+      --text-mid: #4A2228;
+      --text-soft: #7A4850;
+      --text-muted: #A87880;
+      --border: rgba(107, 15, 26, 0.12);
+      --border-mid: rgba(107, 15, 26, 0.22);
+      --shadow-sm: 0 4px 12px rgba(107, 15, 26, 0.06);
+      --shadow-md: 0 8px 30px rgba(107, 15, 26, 0.1);
+      --shadow-lg: 0 20px 60px rgba(107, 15, 26, 0.15);
+      --sidebar-bg: #2D0609;
+      --sidebar-text: rgba(255, 255, 255, 0.7);
+      --sidebar-active-bg: rgba(201, 168, 76, 0.15);
+      --card-bg: #FFFFFF;
+      --page-bg: #FAF7F2;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-xl: 28px;
+      --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
-</head>
-<body>
-  <!-- Campus Connect -->
-</body>
+    [data-theme="dark"] {
+      --maroon: #E05060;
+      --maroon-dark: #C03040;
+      --maroon-deep: #1A0608;
+      --maroon-light: #FF6070;
+      --maroon-soft: #FF4055;
+      --maroon-muted: #2A1218;
+      --maroon-tint: #1E0D10;
+      --gold: #E2C675;
+      --gold-light: #F0D890;
+      --gold-pale: #2A2210;
+      --cream: #0F0608;
+      --white: #1A0B0E;
+      --text-dark: #F5E8EA;
+      --text-mid: #D0A0A8;
+      --text-soft: #B08088;
+      --text-muted: #806068;
+      --border: rgba(229, 80, 96, 0.18);
+      --border-mid: rgba(229, 80, 96, 0.28);
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
+      --sidebar-bg: #0F0305;
+      --sidebar-text: rgba(255, 255, 255, 0.6);
+      --sidebar-active-bg: rgba(226, 198, 117, 0.12);
+      --card-bg: #1A0B0E;
+      --page-bg: #0F0608;
+    }
+
+    [data-theme="ocean"] {
+      --maroon: #006699;
+      --maroon-dark: #004466;
+      --maroon-deep: #002233;
+      --maroon-light: #3399CC;
+      --maroon-soft: #0077B3;
+      --maroon-muted: #E6F2F9;
+      --maroon-tint: #F0F8FF;
+      --gold: #00BFFF;
+      --gold-light: #80DFFF;
+      --gold-pale: #E6FAFF;
+      --cream: #F0F8FF;
+      --white: #FFFFFF;
+      --text-dark: #00111A;
+      --text-mid: #00334D;
+      --text-soft: #005580;
+      --text-muted: #6699B3;
+      --border: rgba(0, 102, 153, 0.12);
+      --border-mid: rgba(0, 102, 153, 0.22);
+      --sidebar-bg: #002233;
+      --sidebar-text: rgba(255, 255, 255, 0.7);
+      --sidebar-active-bg: rgba(0, 191, 255, 0.15);
+      --card-bg: #FFFFFF;
+      --page-bg: #F0F8FF;
+    }
+
+    [data-theme="nature"] {
+      --maroon: #2E5C31;
+      --maroon-dark: #1F3D21;
+      --maroon-deep: #0F1F10;
+      --maroon-light: #4A934E;
+      --maroon-soft: #3B753E;
+      --maroon-muted: #EBF2EC;
+      --maroon-tint: #F4F8F4;
+      --gold: #F4A261;
+      --gold-light: #F8C59F;
+      --gold-pale: #FEF6F0;
+      --cream: #FAFBF9;
+      --white: #FFFFFF;
+      --text-dark: #0A140B;
+      --text-mid: #1A331C;
+      --text-soft: #29522D;
+      --text-muted: #6B8E6F;
+      --border: rgba(46, 92, 49, 0.12);
+      --border-mid: rgba(46, 92, 49, 0.22);
+      --sidebar-bg: #0F1F10;
+      --sidebar-text: rgba(255, 255, 255, 0.7);
+      --sidebar-active-bg: rgba(244, 162, 97, 0.15);
+      --card-bg: #FFFFFF;
+      --page-bg: #FAFBF9;
+    }
+
+    [data-theme="sunset"] {
+      --maroon: #E05A47;
+      --maroon-dark: #B33D2D;
+      --maroon-deep: #591A12;
+      --maroon-light: #F08E81;
+      --maroon-soft: #E87160;
+      --maroon-muted: #FCEFEB;
+      --maroon-tint: #FEF7F5;
+      --gold: #FFB347;
+      --gold-light: #FFD199;
+      --gold-pale: #FFF7EB;
+      --cream: #FEFCFA;
+      --white: #FFFFFF;
+      --text-dark: #2B0C08;
+      --text-mid: #591A12;
+      --text-soft: #8C2C1F;
+      --text-muted: #B3685E;
+      --border: rgba(224, 90, 71, 0.12);
+      --border-mid: rgba(224, 90, 71, 0.22);
+      --sidebar-bg: #3D120C;
+      --sidebar-text: rgba(255, 255, 255, 0.7);
+      --sidebar-active-bg: rgba(255, 179, 71, 0.15);
+      --card-bg: #FFFFFF;
+      --page-bg: #FEFCFA;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--page-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.4s, color 0.4s;
+    }
+
+
+  </style>
 </html>
