@@ -123,5 +123,47 @@
       --page-bg: #FAFBF9;
     }
 
+    [data-theme="sunset"] {
+      --maroon: #E05A47;
+      --maroon-dark: #B33D2D;
+      --maroon-deep: #591A12;
+      --maroon-light: #F08E81;
+      --maroon-soft: #E87160;
+      --maroon-muted: #FCEFEB;
+      --maroon-tint: #FEF7F5;
+      --gold: #FFB347;
+      --gold-light: #FFD199;
+      --gold-pale: #FFF7EB;
+      --cream: #FEFCFA;
+      --white: #FFFFFF;
+      --text-dark: #2B0C08;
+      --text-mid: #591A12;
+      --text-soft: #8C2C1F;
+      --text-muted: #B3685E;
+      --border: rgba(224, 90, 71, 0.12);
+      --border-mid: rgba(224, 90, 71, 0.22);
+      --sidebar-bg: #3D120C;
+      --sidebar-text: rgba(255, 255, 255, 0.7);
+      --sidebar-active-bg: rgba(255, 179, 71, 0.15);
+      --card-bg: #FFFFFF;
+      --page-bg: #FEFCFA;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--page-bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background 0.4s, color 0.4s;
+    }
+
+
   </style>
 </html>
