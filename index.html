@@ -164,6 +164,111 @@
       transition: background 0.4s, color 0.4s;
     }
 
+    /* ── SPLASH SCREEN ── */
+    #splash {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: linear-gradient(135deg, #2D0609 0%, #6B0F1A 50%, #B5293A 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+
+    #splash.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .splash-logo-ring {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 2px solid rgba(201, 168, 76, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: splashPulse 2s ease-in-out infinite;
+      margin-bottom: 1.5rem;
+    }
+
+    .splash-logo-ring .logo-inner {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(201, 168, 76, 0.15);
+      border: 1px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+    }
+
+    .splash-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      color: #fff;
+      letter-spacing: -0.5px;
+      text-align: center;
+    }
+
+    .splash-sub {
+      color: rgba(226, 198, 117, 0.8);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      margin-top: 0.4rem;
+      font-weight: 500;
+    }
+
+    .splash-bar {
+      width: 180px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 2px;
+      margin-top: 2.5rem;
+      overflow: hidden;
+    }
+
+    .splash-bar-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 2px;
+      animation: splashLoad 2s ease forwards;
+    }
+
+    .splash-tagline {
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.75rem;
+      margin-top: 1rem;
+      letter-spacing: 0.5px;
+    }
+
+    @keyframes splashPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 0.8
+      }
+    }
+
+    @keyframes splashLoad {
+      0% {
+        width: 0
+      }
+
+      100% {
+        width: 100%
+      }
+    }
+
 
   </style>
 </html>
