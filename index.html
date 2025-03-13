@@ -1604,6 +1604,229 @@
       transform: scale(1.05);
     }
 
+    /* ── NOTES ── */
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .note-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .note-card:hover {
+      box-shadow: var(--shadow-sm);
+      border-color: var(--maroon);
+    }
+
+    .note-card .note-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .note-card .note-title {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text-dark);
+      margin-bottom: 0.3rem;
+    }
+
+    .note-card .note-meta {
+      font-size: 0.73rem;
+      color: var(--text-soft);
+      margin-bottom: 0.6rem;
+    }
+
+    .note-card .note-stats {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+
+    .download-btn {
+      width: 100%;
+      margin-top: 0.75rem;
+      padding: 0.45rem;
+      background: var(--maroon-tint);
+      color: var(--maroon);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: var(--transition);
+    }
+
+    .download-btn:hover {
+      background: var(--maroon);
+      color: white;
+    }
+
+    .upload-zone {
+      border: 2px dashed var(--border-mid);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--maroon-tint);
+    }
+
+    .upload-zone:hover {
+      border-color: var(--maroon);
+      background: var(--maroon-muted);
+    }
+
+    .upload-zone p {
+      color: var(--text-soft);
+      font-size: 0.88rem;
+      margin-top: 0.5rem;
+    }
+
+    .leaderboard-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .leaderboard-item:last-child {
+      border-bottom: none;
+    }
+
+    .rank {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .rank.gold {
+      background: #FFF3D0;
+      color: #B8860B;
+    }
+
+    .rank.silver {
+      background: #F0F0F0;
+      color: #696969;
+    }
+
+    .rank.bronze {
+      background: #F5E6D8;
+      color: #8B4513;
+    }
+
+    .rank.other {
+      background: var(--maroon-tint);
+      color: var(--maroon);
+      font-size: 0.65rem;
+    }
+
+    .lb-pts {
+      margin-left: auto;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--maroon);
+    }
+
+    .lb-bar {
+      width: 80px;
+      height: 4px;
+      background: var(--maroon-tint);
+      border-radius: 2px;
+      margin-left: 0.5rem;
+      overflow: hidden;
+    }
+
+    .lb-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 2px;
+    }
+
+    /* ── SENIORS ── */
+    .senior-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      transition: var(--transition);
+    }
+
+    .senior-card:hover {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .senior-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    .yr4 {
+      background: #FFF3D0;
+      color: #8B5E00;
+    }
+
+    .yr3 {
+      background: var(--maroon-tint);
+      color: var(--maroon);
+    }
+
+    .yr2 {
+      background: #E8F4FF;
+      color: #1A5DAD;
+    }
+
+    .exp-tag {
+      padding: 3px 8px;
+      background: #F0F7FF;
+      color: #1A5DAD;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .expertise-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
+
+    .stars {
+      color: var(--gold);
+    }
+
 
   </style>
 </html>
