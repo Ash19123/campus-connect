@@ -2252,6 +2252,337 @@
       background: var(--maroon-dark);
     }
 
+    /* ── TIMETABLE ── */
+    .timetable {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .timetable th {
+      background: var(--maroon);
+      color: white;
+      padding: 0.7rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .timetable td {
+      padding: 0.55rem;
+      font-size: 0.75rem;
+      border: 1px solid var(--border);
+      text-align: center;
+      vertical-align: top;
+      min-width: 100px;
+      cursor: pointer;
+      transition: background 0.15s;
+      color: var(--text-dark);
+    }
+
+    .timetable td:hover:not(.time-col) {
+      background: var(--maroon-tint);
+    }
+
+    .timetable td.time-col {
+      background: var(--maroon-tint);
+      font-weight: 600;
+      color: var(--maroon);
+      min-width: 72px;
+      cursor: default;
+    }
+
+    .class-block {
+      background: var(--maroon-tint);
+      border-radius: 5px;
+      padding: 0.3rem 0.45rem;
+      text-align: left;
+    }
+
+    .class-block .class-name {
+      font-weight: 600;
+      color: var(--maroon);
+      font-size: 0.75rem;
+    }
+
+    .class-block .class-room {
+      font-size: 0.65rem;
+      color: var(--text-soft);
+    }
+
+    .class-block.lab {
+      background: #E8F4FF;
+    }
+
+    .class-block.lab .class-name {
+      color: #1A5DAD;
+    }
+
+    .class-block.free {
+      background: #E8FFE8;
+    }
+
+    .class-block.free .class-name {
+      color: #1A6B1A;
+    }
+
+    /* ── POLLS ── */
+    .poll-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .poll-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+      border-color: var(--maroon);
+    }
+
+    .poll-question {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+    }
+
+    .poll-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.75rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .poll-option:hover {
+      border-color: var(--maroon);
+    }
+
+    .poll-option.voted {
+      border-color: var(--maroon);
+    }
+
+    .poll-option .option-text {
+      font-size: 0.88rem;
+      color: var(--text-dark);
+      z-index: 1;
+      flex: 1;
+    }
+
+    .poll-option .option-pct {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--maroon);
+      z-index: 1;
+    }
+
+    .poll-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: var(--maroon-tint);
+      transition: width 0.5s ease;
+      z-index: 0;
+    }
+
+    .poll-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.75rem;
+    }
+
+    /* ── CONFESSIONS ── */
+    .confession-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      transition: var(--transition);
+    }
+
+    .confession-card:hover {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .anon-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--maroon-tint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .confession-id {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-soft);
+    }
+
+    .confession-time {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .confession-body {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .reaction-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.28rem 0.7rem;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: none;
+      font-size: 0.75rem;
+      cursor: pointer;
+      color: var(--text-soft);
+      transition: var(--transition);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .reaction-btn:hover,
+    .reaction-btn.reacted {
+      border-color: var(--maroon);
+      color: var(--maroon);
+      background: var(--maroon-tint);
+    }
+
+    .conf-academic {
+      background: #E8F4FF;
+      color: #1A5DAD;
+    }
+
+    .conf-hostel {
+      background: var(--maroon-tint);
+      color: var(--maroon);
+    }
+
+    .conf-social {
+      background: #FFF3D0;
+      color: #8B5E00;
+    }
+
+    .conf-rant {
+      background: #FFE8E8;
+      color: #8B1A1A;
+    }
+
+    .tag-filter {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+    }
+
+    /* ── LOST & FOUND ── */
+    .lf-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      padding: 1.25rem;
+      transition: var(--transition);
+    }
+
+    .lf-card:hover {
+      box-shadow: var(--shadow-sm);
+    }
+
+    .lf-img {
+      width: 56px;
+      height: 56px;
+      border-radius: 10px;
+      background: var(--maroon-tint);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      flex-shrink: 0;
+    }
+
+    .lf-status {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 20px;
+    }
+
+    .status-lost {
+      background: #FFE8E8;
+      color: #8B1A1A;
+    }
+
+    .status-found {
+      background: #E8FFE8;
+      color: #1A6B1A;
+    }
+
+    .status-claimed {
+      background: var(--maroon-tint);
+      color: var(--maroon);
+    }
+
+    .lf-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+    }
+
+    .lf-desc {
+      font-size: 0.77rem;
+      color: var(--text-soft);
+      margin-top: 0.25rem;
+    }
+
+    .lf-location {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .lf-contact-btn {
+      width: 100%;
+      margin-top: 0.75rem;
+      padding: 0.45rem;
+      border: 1.5px solid var(--maroon);
+      color: var(--maroon);
+      background: none;
+      border-radius: var(--radius-sm);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .lf-contact-btn:hover {
+      background: var(--maroon);
+      color: white;
+    }
+
 
   </style>
 </html>
