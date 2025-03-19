@@ -2902,5 +2902,983 @@
       }
     }
   </style>
+</head>
 
+<body>
+
+  <!-- ── SPLASH SCREEN ── -->
+  <div id="splash">
+    <div class="splash-logo-ring">
+      <div class="logo-inner">🎓</div>
+    </div>
+    <div class="splash-title">Campus Connect</div>
+    <div class="splash-sub">AMRITA VISHWA VIDYAPEETHAM · AMARAVATI</div>
+    <div class="splash-bar">
+      <div class="splash-bar-fill"></div>
+    </div>
+    <div class="splash-tagline">Loading your campus experience...</div>
+  </div>
+
+  <!-- ── LOGIN TRANSITION ── -->
+  <div id="login-transition">
+    <div class="lt-logo">🎓</div>
+    <div class="lt-text" id="lt-welcome-text">Welcome back!</div>
+    <div class="lt-sub">Taking you to your campus...</div>
+    <div class="lt-dots">
+      <div class="lt-dot"></div>
+      <div class="lt-dot"></div>
+      <div class="lt-dot"></div>
+    </div>
+  </div>
+
+  <!-- ── AUTH PAGE ── -->
+  <div id="page-auth" class="page active">
+    <div class="auth-container">
+      <div class="auth-logo">
+        <div class="logo-ring">🎓</div>
+        <h1>Campus Connect</h1>
+        <p>AMRITA VISHWA VIDYAPEETHAM · AMARAVATI</p>
+      </div>
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="switchAuthTab('login',this)">Sign In</button>
+          <button class="auth-tab" onclick="switchAuthTab('signup',this)">Join Now</button>
+        </div>
+        <div id="tab-login" class="tab-content active">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="e.g. Aasritha Dakshinyam" id="login-name">
+          </div>
+          <div class="form-group">
+            <label>Roll Number</label>
+            <input type="text" placeholder="e.g. CB.EN.U4CSE22001" id="login-roll">
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" placeholder="Enter your password" id="login-pass">
+          </div>
+          <button class="btn-primary" onclick="doLogin()">Sign In to Campus Connect</button>
+          <p style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:1rem;">Exclusive to <strong
+              style="color:var(--maroon)">Amrita Amaravati</strong> students</p>
+        </div>
+        <div id="tab-signup" class="tab-content">
+          <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your full name" id="su-name">
+          </div>
+          <div class="form-group"><label>Roll Number</label><input type="text" placeholder="AV.SC.U4AIE25001"
+              id="su-roll"></div>
+          <div class="form-group"><label>Department</label>
+            <select id="su-dept">
+              <option>Computer Science & Engineering</option>
+              <option>Electronics & Communication</option>
+              <option>Mechanical Engineering</option>
+              <option>Civil Engineering</option>
+              <option>Electrical Engineering</option>
+              <option>AI & Data Science</option>
+              <option>Robotics & Automation</option>
+              <option>Artifial Intelligence and Machine Learning</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Year of Study</label>
+            <select id="su-year">
+              <option>1st Year</option>
+              <option>2nd Year</option>
+              <option>3rd Year</option>
+              <option>4th Year</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Pick Your Interests (at least 3)</label>
+            <div class="interests-grid" id="interests-grid">
+              <div class="interest-chip" onclick="toggleInterest(this)">Coding</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">Gaming</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">Music</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">Research</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">Sports</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">Design</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">AI/ML</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">Photo</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">Travel</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">Drama</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">Nature</div>
+              <div class="interest-chip" onclick="toggleInterest(this)">Fitness</div>
+            </div>
+          </div>
+          <div class="form-group"><label>Password</label><input type="password" placeholder="Create a strong password"
+              id="su-pass"></div>
+          <button class="btn-primary" onclick="doSignup()">Create My Campus Profile</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MAIN APP ── -->
+  <div id="page-app" class="page">
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+    <nav class="sidebar" id="main-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <div class="brand-icon">🎓</div>
+          <div class="brand-text">
+            <h2>Campus Connect</h2>
+            <p>AMRITA · AMARAVATI</p>
+          </div>
+        </div>
+      </div>
+      <div class="sidebar-user">
+        <div class="avatar" id="sidebar-avatar">??</div>
+        <div class="user-info">
+          <div class="name" id="sidebar-name">Loading...</div>
+          <div class="roll" id="sidebar-roll">— · —</div>
+        </div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section-label">Main</div>
+        <div class="nav-item active" onclick="showSection('dashboard')"><span class="nav-icon">🏠</span> Dashboard</div>
+        <div class="nav-item" onclick="showSection('matches')"><span class="nav-icon">✨</span> Student Match<span
+            class="badge">8</span></div>
+        <div class="nav-item" onclick="showSection('chat')"><span class="nav-icon">💬</span> Messages<span
+            class="badge">3</span></div>
+        <div class="nav-section-label">Community</div>
+        <div class="nav-item" onclick="showSection('notes')"><span class="nav-icon">📚</span> Notes Hub</div>
+        <div class="nav-item" onclick="showSection('seniors')"><span class="nav-icon">🎓</span> Seniors Connect</div>
+        <div class="nav-item" onclick="showSection('activity')"><span class="nav-icon">📢</span> Activity Feed</div>
+        <div class="nav-item" onclick="showSection('events')"><span class="nav-icon">📅</span> Events Calendar</div>
+        <div class="nav-item" onclick="showSection('studyrooms')"><span class="nav-icon">📖</span> Study Rooms<span
+            class="badge">4</span></div>
+        <div class="nav-item" onclick="showSection('timetable')"><span class="nav-icon">🗓️</span> My Timetable</div>
+        <div class="nav-item" onclick="showSection('polls')"><span class="nav-icon">📊</span> Polls & Surveys</div>
+        <div class="nav-item" onclick="showSection('confessions')"><span class="nav-icon">🕵️</span> Confessions</div>
+        <div class="nav-item" onclick="showSection('lostandfound')"><span class="nav-icon">🔍</span> Lost & Found</div>
+        <div class="nav-section-label">Account</div>
+        <div class="nav-item" onclick="showSection('profile')"><span class="nav-icon">👤</span> My Profile</div>
+      </div>
+      <div class="sidebar-footer">
+        <button class="logout-btn" onclick="doLogout()"><span>⬅️</span> Sign Out</button>
+        <button class="dark-toggle" onclick="openModal('theme-modal')" id="dark-btn" title="Change Theme">🎨
+          Theme</button>
+      </div>
+    </nav>
+
+    <div class="main-content" id="main-content">
+
+      <!-- ── DASHBOARD ── -->
+      <div id="section-dashboard" class="content-section active">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <h1 class="topbar-title" id="dashboard-greeting">Good morning</h1>
+          </div>
+          <div class="topbar-right">
+            <div class="datetime-pill">🕐 <span id="live-time">--:--</span> · <span id="live-date">--</span></div>
+            <div class="points-pill">⭐ <span id="user-points">340</span> pts</div>
+            <div class="notif-wrapper">
+              <button class="notif-btn" onclick="toggleNotifPanel()">🔔<span class="notif-count"
+                  id="notif-count">5</span></button>
+              <div class="notif-panel" id="notif-panel">
+                <div class="notif-panel-header">
+                  <h4>Notifications</h4><button class="notif-mark-read" onclick="markAllRead()">Mark all read</button>
+                </div>
+                <div id="notif-list"></div>
+                <div class="notif-footer"><button onclick="showToast('📬 All notifications loaded')">View all
+                    notifications</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-icon">🤝</div>
+              <div class="stat-val">24</div>
+              <div class="stat-label">Connections</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">📄</div>
+              <div class="stat-val">12</div>
+              <div class="stat-label">Notes Shared</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">⭐</div>
+              <div class="stat-val">340</div>
+              <div class="stat-label">Points Earned</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon">🏆</div>
+              <div class="stat-val">#7</div>
+              <div class="stat-label">Leaderboard</div>
+            </div>
+          </div>
+          <div class="quick-links">
+            <div class="quick-link" onclick="showSection('matches')">
+              <div class="ql-icon">✨</div>
+              <div class="ql-label">Find Matches</div>
+              <div class="ql-sub">8 new suggestions</div>
+            </div>
+            <div class="quick-link" onclick="showSection('studyrooms')">
+              <div class="ql-icon">📖</div>
+              <div class="ql-label">Study Rooms</div>
+              <div class="ql-sub">4 live now</div>
+            </div>
+            <div class="quick-link" onclick="showSection('events')">
+              <div class="ql-icon">📅</div>
+              <div class="ql-label">Events</div>
+              <div class="ql-sub">3 this week</div>
+            </div>
+            <div class="quick-link" onclick="showSection('polls')">
+              <div class="ql-icon">📊</div>
+              <div class="ql-label">Polls</div>
+              <div class="ql-sub">2 active</div>
+            </div>
+          </div>
+          <div class="quick-links">
+            <div class="quick-link" onclick="showSection('confessions')">
+              <div class="ql-icon">🕵️</div>
+              <div class="ql-label">Confessions</div>
+              <div class="ql-sub">12 new today</div>
+            </div>
+            <div class="quick-link" onclick="showSection('lostandfound')">
+              <div class="ql-icon">🔍</div>
+              <div class="ql-label">Lost & Found</div>
+              <div class="ql-sub">5 active posts</div>
+            </div>
+            <div class="quick-link" onclick="showSection('timetable')">
+              <div class="ql-icon">🗓️</div>
+              <div class="ql-label">Timetable</div>
+              <div class="ql-sub">Next: OS Lab 2PM</div>
+            </div>
+            <div class="quick-link" onclick="showSection('notes')">
+              <div class="ql-icon">📚</div>
+              <div class="ql-label">Notes Hub</div>
+              <div class="ql-sub">Share & earn</div>
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="card">
+              <div class="card-header">
+                <h3>🔥 Top Matches</h3><span
+                  style="font-size:0.78rem;color:var(--maroon);cursor:pointer;font-weight:600;"
+                  onclick="showSection('matches')">See all →</span>
+              </div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:0.75rem;" id="dash-matches"></div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3>📅 Upcoming Events</h3><span
+                  style="font-size:0.78rem;color:var(--maroon);cursor:pointer;font-weight:600;"
+                  onclick="showSection('events')">View all →</span>
+              </div>
+              <div class="card-body" style="display:flex;flex-direction:column;gap:0.75rem;" id="dash-events"></div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:1.5rem;">
+            <div class="card-header">
+              <h3>📢 Latest Activity</h3><span
+                style="font-size:0.78rem;color:var(--maroon);cursor:pointer;font-weight:600;"
+                onclick="showSection('activity')">View all →</span>
+            </div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:0.75rem;" id="dash-activity"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MATCHES ── -->
+      <div id="section-matches" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()" title="Go back"><span>←</span> Back</button>
+            <h1 class="topbar-title">Student Match ✨</h1>
+          </div>
+          <div class="topbar-right">
+            <div class="search-bar">🔍 <input placeholder="Search students..." /></div>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="section-header">
+            <h2>Your Best Matches</h2>
+            <p class="section-subtitle">Based on your interests, branch & year.</p>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-chip active" onclick="setFilter(this)">All</button>
+            <button class="filter-chip" onclick="setFilter(this)">Same Year</button>
+            <button class="filter-chip" onclick="setFilter(this)">Same Branch</button>
+            <button class="filter-chip" onclick="setFilter(this)">Coding</button>
+            <button class="filter-chip" onclick="setFilter(this)">AI/ML</button>
+            <button class="filter-chip" onclick="setFilter(this)">Sports</button>
+            <button class="filter-chip" onclick="setFilter(this)">Music</button>
+          </div>
+          <div class="three-col" id="matches-grid"></div>
+        </div>
+      </div>
+
+      <!-- ── CHAT ── -->
+      <div id="section-chat" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()" title="Go back"><span>←</span> Back</button>
+            <h1 class="topbar-title">Messages 💬</h1>
+          </div>
+          <div class="topbar-right">
+            <div class="points-pill">🕵️ Anonymous Mode</div>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="chat-layout">
+            <div class="chat-sidebar">
+              <div class="chat-sidebar-header">
+                <h4>Chats</h4>
+                <div class="chat-mode-toggle">
+                  <button class="mode-btn active" onclick="setChatMode('normal',this)">Normal</button>
+                  <button class="mode-btn" onclick="setChatMode('anon',this)">Anon</button>
+                </div>
+              </div>
+              <div class="chat-list" id="chat-list"></div>
+            </div>
+            <div class="chat-main">
+              <div class="chat-header" id="chat-header">
+                <div class="chat-avatar"
+                  style="width:36px;height:36px;border-radius:50%;background:var(--maroon-soft);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:0.82rem;"
+                  id="chat-hdr-av">AV</div>
+                <div>
+                  <div class="chat-name-lg" id="chat-hdr-name">Arjun Varma</div>
+                  <div class="chat-status">● Online</div>
+                </div>
+                <div class="anon-badge" id="anon-badge" style="display:none;">🕵️ Anonymous</div>
+              </div>
+              <div class="messages" id="messages-container">
+                <div class="msg recv">
+                  <div class="msg-bubble">Hey! Saw your match — we both love coding and AI/ML 🤖</div>
+                  <div class="msg-time">10:32 AM</div>
+                </div>
+                <div class="msg sent">
+                  <div class="msg-bubble">Haha yes! Are you working on any projects currently?</div>
+                  <div class="msg-time">10:34 AM</div>
+                </div>
+                <div class="msg recv">
+                  <div class="msg-bubble">Yeah, building a recommendation system for my final year project. What about
+                    you?</div>
+                  <div class="msg-time">10:35 AM</div>
+                </div>
+                <div class="msg sent">
+                  <div class="msg-bubble">That's so cool! Maybe we should collaborate! 🚀</div>
+                  <div class="msg-time">10:37 AM</div>
+                </div>
+                <div class="msg recv">
+                  <div class="msg-bubble">Absolutely! Let's meet in the CS lab tomorrow? 👨‍💻</div>
+                  <div class="msg-time">10:38 AM</div>
+                </div>
+              </div>
+              <div class="chat-input-bar">
+                <input placeholder="Type a message..." id="msg-input" onkeydown="if(event.key==='Enter')sendMessage()">
+                <button class="send-btn" onclick="sendMessage()">➤</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── NOTES HUB ── -->
+      <div id="section-notes" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()"><span>←</span> Back</button>
+            <h1 class="topbar-title">Notes Hub 📚</h1>
+          </div>
+          <div class="topbar-right">
+            <div class="points-pill">⭐ <span id="user-points-notes">340</span> pts earned</div>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="two-col">
+            <div>
+              <div class="section-header">
+                <h2>Browse Notes</h2>
+                <p class="section-subtitle">Download & reward contributors automatically.</p>
+              </div>
+              <div class="filter-bar">
+                <button class="filter-chip active" onclick="setFilter(this)">All</button>
+                <button class="filter-chip" onclick="setFilter(this)">CSE</button>
+                <button class="filter-chip" onclick="setFilter(this)">ECE</button>
+                <button class="filter-chip" onclick="setFilter(this)">Maths</button>
+              </div>
+              <div class="notes-grid" id="notes-grid"></div>
+            </div>
+            <div>
+              <div class="section-header">
+                <h2>Upload Notes</h2>
+                <p class="section-subtitle">Share your notes & earn points when others download.</p>
+              </div>
+              <div class="upload-zone" onclick="showToast('📄 Upload feature opening...')">
+                <div style="font-size:2.5rem;">📤</div>
+                <p><strong>Drop your PDF here</strong> or click to browse</p>
+                <p style="font-size:0.76rem;margin-top:0.3rem;">PDF, DOCX, PPTX · Max 25MB</p>
+              </div>
+              <div class="card" style="margin-top:1.5rem;">
+                <div class="card-header">
+                  <h3>🏆 Top Contributors</h3>
+                </div>
+                <div class="card-body" id="leaderboard-full"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SENIORS CONNECT ── -->
+      <div id="section-seniors" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()"><span>←</span> Back</button>
+            <h1 class="topbar-title">Seniors Connect 🎓</h1>
+          </div>
+          <div class="topbar-right">
+            <div class="search-bar">🔍 <input placeholder="Search seniors..." /></div>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="section-header">
+            <h2>Connect with Seniors</h2>
+            <p class="section-subtitle">Get guidance on academics, internships & career paths.</p>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-chip active" onclick="setFilter(this)">All</button>
+            <button class="filter-chip" onclick="setFilter(this)">Internships</button>
+            <button class="filter-chip" onclick="setFilter(this)">Placements</button>
+            <button class="filter-chip" onclick="setFilter(this)">Research</button>
+            <button class="filter-chip" onclick="setFilter(this)">GATE</button>
+            <button class="filter-chip" onclick="setFilter(this)">GRE/MS</button>
+          </div>
+          <div class="three-col" id="seniors-grid"></div>
+        </div>
+      </div>
+
+      <!-- ── ACTIVITY FEED ── -->
+      <div id="section-activity" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()"><span>←</span> Back</button>
+            <h1 class="topbar-title">Activity Feed 📢</h1>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="section-header">
+            <h2>What's Happening Now</h2>
+            <p class="section-subtitle">Post what you're up to and find spontaneous companions.</p>
+          </div>
+          <div class="post-composer">
+            <div class="composer-input">
+              <div class="avatar" id="post-avatar">??</div>
+              <textarea id="post-text" placeholder="What are you up to? Looking for someone to join?"></textarea>
+            </div>
+            <div class="composer-footer">
+              <button class="type-select-btn active" onclick="selectPostType(this,'canteen')">🍔 Canteen</button>
+              <button class="type-select-btn" onclick="selectPostType(this,'study')">📖 Study</button>
+              <button class="type-select-btn" onclick="selectPostType(this,'event')">🎉 Event</button>
+              <button class="type-select-btn" onclick="selectPostType(this,'sport')">⚽ Sport</button>
+              <button class="post-submit" onclick="submitPost()">Post Activity</button>
+            </div>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-chip active" onclick="setFilter(this)">All</button>
+            <button class="filter-chip" onclick="setFilter(this)">🍔 Canteen</button>
+            <button class="filter-chip" onclick="setFilter(this)">📖 Study</button>
+            <button class="filter-chip" onclick="setFilter(this)">🎉 Events</button>
+            <button class="filter-chip" onclick="setFilter(this)">⚽ Sports</button>
+          </div>
+          <div class="activity-feed" id="activity-feed"></div>
+        </div>
+      </div>
+
+      <!-- ── EVENTS CALENDAR ── -->
+      <div id="section-events" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()"><span>←</span> Back</button>
+            <h1 class="topbar-title">Events Calendar 📅</h1>
+          </div>
+          <div class="topbar-right">
+            <div class="datetime-pill">🕐 <span id="ev-live-time">--:--</span></div>
+            <button onclick="openModal('event-modal')"
+              style="padding:0.5rem 1.2rem;background:var(--maroon);color:white;border:none;border-radius:20px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">+
+              Add Event</button>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="two-col">
+            <div>
+              <div class="section-header">
+                <h2 id="cal-month-label">April 2026</h2>
+              </div>
+              <div class="card" style="padding:1.25rem;">
+                <div class="calendar-grid" id="cal-grid"></div>
+              </div>
+            </div>
+            <div>
+              <div class="section-header">
+                <h2>Upcoming Events</h2>
+                <p class="section-subtitle">Don't miss out on campus happenings.</p>
+              </div>
+              <div class="filter-bar">
+                <button class="filter-chip active" onclick="setFilter(this)">All</button>
+                <button class="filter-chip" onclick="setFilter(this)">Tech</button>
+                <button class="filter-chip" onclick="setFilter(this)">Sports</button>
+                <button class="filter-chip" onclick="setFilter(this)">Cultural</button>
+                <button class="filter-chip" onclick="setFilter(this)">Academic</button>
+              </div>
+              <div class="event-list" id="events-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STUDY ROOMS ── -->
+      <div id="section-studyrooms" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()"><span>←</span> Back</button>
+            <h1 class="topbar-title">Study Rooms 📖</h1>
+          </div>
+          <div class="topbar-right">
+            <button onclick="openModal('study-modal')"
+              style="padding:0.5rem 1.2rem;background:var(--maroon);color:white;border:none;border-radius:20px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">+
+              Create Room</button>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="section-header">
+            <h2>Live Study Rooms</h2>
+            <p class="section-subtitle">Join a focused study session or start your own.</p>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-chip active" onclick="setFilter(this)">All</button>
+            <button class="filter-chip" onclick="setFilter(this)">CSE</button>
+            <button class="filter-chip" onclick="setFilter(this)">ECE</button>
+            <button class="filter-chip" onclick="setFilter(this)">AI/ML</button>
+            <button class="filter-chip" onclick="setFilter(this)">Open to All</button>
+          </div>
+          <div class="three-col" id="study-rooms-grid"></div>
+        </div>
+      </div>
+
+      <!-- ── TIMETABLE ── -->
+      <div id="section-timetable" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()"><span>←</span> Back</button>
+            <h1 class="topbar-title">My Timetable 🗓️</h1>
+          </div>
+          <div class="topbar-right">
+            <div class="points-pill" id="tt-section-label">📍 CSE · 3rd Year · Sec B</div>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="section-header">
+            <h2>Weekly Schedule</h2>
+            <p class="section-subtitle">Click any slot to set a reminder.</p>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="timetable" id="timetable-table"></table>
+          </div>
+          <div class="card" style="margin-top:1.5rem;">
+            <div class="card-header">
+              <h3>📌 Today's Classes</h3>
+            </div>
+            <div class="card-body">
+              <div id="today-classes"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── POLLS ── -->
+      <div id="section-polls" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()"><span>←</span> Back</button>
+            <h1 class="topbar-title">Polls & Surveys 📊</h1>
+          </div>
+          <div class="topbar-right">
+            <button onclick="openModal('poll-modal')"
+              style="padding:0.5rem 1.2rem;background:var(--maroon);color:white;border:none;border-radius:20px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">+
+              Create Poll</button>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="section-header">
+            <h2>Campus Polls</h2>
+            <p class="section-subtitle">Vote & see what your campus community thinks.</p>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-chip active" onclick="setFilter(this)">Active</button>
+            <button class="filter-chip" onclick="setFilter(this)">My Polls</button>
+            <button class="filter-chip" onclick="setFilter(this)">Closed</button>
+          </div>
+          <div class="three-col" id="polls-grid"></div>
+        </div>
+      </div>
+
+      <!-- ── CONFESSIONS ── -->
+      <div id="section-confessions" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()"><span>←</span> Back</button>
+            <h1 class="topbar-title">Confessions 🕵️</h1>
+          </div>
+          <div class="topbar-right">
+            <div class="points-pill">🔒 100% Anonymous</div>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="section-header">
+            <h2>Anonymous Wall</h2>
+            <p class="section-subtitle">Share what's on your mind. Your identity stays hidden — always.</p>
+          </div>
+          <div
+            style="background:var(--card-bg);border-radius:var(--radius-md);border:2px dashed var(--border-mid);padding:1.5rem;margin-bottom:1.5rem;text-align:center;cursor:pointer;transition:var(--transition);"
+            onclick="openModal('confession-modal')"
+            onmouseover="this.style.borderColor='var(--maroon)';this.style.background='var(--maroon-tint)'"
+            onmouseout="this.style.borderColor='var(--border-mid)';this.style.background='var(--card-bg)'">
+            <div style="font-size:2rem;">🎭</div>
+            <p style="color:var(--text-soft);font-size:0.88rem;margin-top:0.5rem;"><strong>Share a confession
+                anonymously</strong> — no one will ever know it's you</p>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-chip active" onclick="setFilter(this)">All</button>
+            <button class="filter-chip" onclick="setFilter(this)">📚 Academic</button>
+            <button class="filter-chip" onclick="setFilter(this)">🏠 Hostel</button>
+            <button class="filter-chip" onclick="setFilter(this)">💬 Social</button>
+            <button class="filter-chip" onclick="setFilter(this)">😤 Rant</button>
+          </div>
+          <div class="three-col" id="confessions-grid"></div>
+        </div>
+      </div>
+
+      <!-- ── LOST & FOUND ── -->
+      <div id="section-lostandfound" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()"><span>←</span> Back</button>
+            <h1 class="topbar-title">Lost & Found 🔍</h1>
+          </div>
+          <div class="topbar-right">
+            <button onclick="openModal('lf-modal')"
+              style="padding:0.5rem 1.2rem;background:var(--maroon);color:white;border:none;border-radius:20px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">+
+              Post Item</button>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="section-header">
+            <h2>Lost & Found Board</h2>
+            <p class="section-subtitle">Report lost items or help someone recover their belongings.</p>
+          </div>
+          <div class="filter-bar">
+            <button class="filter-chip active" onclick="setFilter(this)">All</button>
+            <button class="filter-chip" onclick="setFilter(this)">🔴 Lost</button>
+            <button class="filter-chip" onclick="setFilter(this)">🟢 Found</button>
+            <button class="filter-chip" onclick="setFilter(this)">Electronics</button>
+            <button class="filter-chip" onclick="setFilter(this)">Books</button>
+          </div>
+          <div class="three-col" id="lf-grid"></div>
+        </div>
+      </div>
+
+      <!-- ── PROFILE ── -->
+      <div id="section-profile" class="content-section">
+        <div class="topbar">
+          <div class="topbar-left">
+            <button class="menu-btn" onclick="openSidebar()">☰</button>
+            <button class="back-btn" onclick="goBack()"><span>←</span> Back</button>
+            <h1 class="topbar-title">My Profile 👤</h1>
+          </div>
+        </div>
+        <div class="section-pad">
+          <div class="profile-header">
+            <div class="avatar-xl" id="profile-avatar-xl">??</div>
+            <div class="profile-info" style="flex:1;">
+              <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;" id="profile-name-display">Loading...
+              </h2>
+              <p style="color:rgba(255,255,255,0.7);font-size:0.88rem;margin-top:0.25rem;" id="profile-roll-display">—
+              </p>
+              <div style="display:flex;gap:0.5rem;margin-top:0.75rem;flex-wrap:wrap;">
+                <span class="p-badge">⭐ <span id="profile-pts">340</span> Points</span>
+                <span class="p-badge">🏆 Rank #7</span>
+                <span class="p-badge">🤝 24 Connections</span>
+                <span class="p-badge">📄 12 Notes</span>
+              </div>
+            </div>
+            <button
+              style="padding:0.6rem 1.25rem;background:rgba(255,255,255,0.15);color:white;border:1.5px solid rgba(255,255,255,0.3);border-radius:var(--radius-sm);font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;"
+              onclick="openEditProfileModal()">Edit Profile</button>
+          </div>
+          <div class="two-col">
+            <div class="card">
+              <div class="card-header">
+                <h3>🎯 Interests & Skills</h3>
+              </div>
+              <div class="card-body">
+                <div
+                  style="font-size:0.75rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:0.6rem;">
+                  Interests</div>
+                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:1rem;" id="profile-interests">
+                  <span class="tag">💻 Coding</span><span class="tag">🤖 AI/ML</span><span class="tag">📚
+                    Research</span><span class="tag">🎵 Music</span><span class="tag">🎨 Design</span>
+                </div>
+                <div
+                  style="font-size:0.75rem;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:0.6rem;">
+                  Technical Skills</div>
+                <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">
+                  <span class="tag">Python</span><span class="tag">Java</span><span class="tag">React</span><span
+                    class="tag">TensorFlow</span><span class="tag">SQL</span>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3>📊 Activity Stats</h3>
+              </div>
+              <div class="card-body">
+                <div style="display:flex;flex-direction:column;gap:0.9rem;">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.83rem;margin-bottom:0.3rem;">
+                      <span style="font-weight:600;">Notes Contribution</span><span
+                        style="color:var(--maroon);font-weight:700;">12 notes</span></div>
+                    <div style="background:var(--maroon-tint);height:5px;border-radius:3px;overflow:hidden;">
+                      <div style="width:48%;height:100%;background:var(--maroon);border-radius:3px;"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.83rem;margin-bottom:0.3rem;">
+                      <span style="font-weight:600;">Community Engagement</span><span
+                        style="color:var(--maroon);font-weight:700;">High</span></div>
+                    <div style="background:var(--maroon-tint);height:5px;border-radius:3px;overflow:hidden;">
+                      <div style="width:78%;height:100%;background:var(--gold);border-radius:3px;"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.83rem;margin-bottom:0.3rem;">
+                      <span style="font-weight:600;">Activity Posts</span><span
+                        style="color:var(--maroon);font-weight:700;">8 posts</span></div>
+                    <div style="background:var(--maroon-tint);height:5px;border-radius:3px;overflow:hidden;">
+                      <div style="width:32%;height:100%;background:var(--maroon-soft);border-radius:3px;"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:0.83rem;margin-bottom:0.3rem;">
+                      <span style="font-weight:600;">Response Rate</span><span
+                        style="color:var(--maroon);font-weight:700;">95%</span></div>
+                    <div style="background:var(--maroon-tint);height:5px;border-radius:3px;overflow:hidden;">
+                      <div style="width:95%;height:100%;background:#1A7A4A;border-radius:3px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── MODALS ── -->
+
+  <div class="modal-overlay" id="theme-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Select Theme 🎨</h3><button class="modal-close" onclick="closeModal('theme-modal')">✕</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <button onclick="setTheme('light')"
+          style="padding:1rem;border-radius:10px;border:1.5px solid var(--border);background:#FAF7F2;color:#1A0608;font-weight:600;cursor:pointer;">☀️
+          Light Theme</button>
+        <button onclick="setTheme('dark')"
+          style="padding:1rem;border-radius:10px;border:1.5px solid var(--border);background:#0F0305;color:#F5E8EA;font-weight:600;cursor:pointer;">🌙
+          Dark Theme</button>
+        <button onclick="setTheme('ocean')"
+          style="padding:1rem;border-radius:10px;border:1.5px solid var(--border);background:#F0F8FF;color:#00111A;font-weight:600;cursor:pointer;">🌊
+          Ocean Theme</button>
+        <button onclick="setTheme('nature')"
+          style="padding:1rem;border-radius:10px;border:1.5px solid var(--border);background:#FAFBF9;color:#0A140B;font-weight:600;cursor:pointer;">🌿
+          Nature Theme</button>
+        <button onclick="setTheme('sunset')"
+          style="padding:1rem;border-radius:10px;border:1.5px solid var(--border);background:#FEFCFA;color:#2B0C08;font-weight:600;cursor:pointer;">🌅
+          Sunset Theme</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="edit-profile-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Edit Profile 👤</h3><button class="modal-close" onclick="closeModal('edit-profile-modal')">✕</button>
+      </div>
+      <div class="modal-form">
+        <div class="form-group"><label>Full Name</label><input type="text" id="edit-name"></div>
+        <div class="form-group"><label>Roll Number</label><input type="text" id="edit-roll"></div>
+        <div class="form-group"><label>Department</label>
+          <select id="edit-dept">
+            <option>Computer Science & Engineering</option>
+            <option>Electronics & Communication</option>
+            <option>Mechanical Engineering</option>
+            <option>Civil Engineering</option>
+            <option>Electrical Engineering</option>
+            <option>AI & Data Science</option>
+            <option>Robotics & Automation</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Year of Study</label>
+          <select id="edit-year">
+            <option>1st Year</option>
+            <option>2nd Year</option>
+            <option>3rd Year</option>
+            <option>4th Year</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="saveProfile()">Save Changes</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="event-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Add Campus Event</h3><button class="modal-close" onclick="closeModal('event-modal')">✕</button>
+      </div>
+      <div class="modal-form">
+        <div class="form-group"><label>Event Name</label><input type="text" placeholder="e.g. TechFest Hackathon"
+            id="ev-name"></div>
+        <div class="form-group"><label>Date</label><input type="date" id="ev-date"></div>
+        <div class="form-group"><label>Time & Venue</label><input type="text" placeholder="e.g. 9 AM · Main Auditorium"
+            id="ev-venue"></div>
+        <div class="form-group"><label>Category</label>
+          <select id="ev-cat">
+            <option value="tech">Tech</option>
+            <option value="cultural">Cultural</option>
+            <option value="sports">Sports</option>
+            <option value="academic">Academic</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="addEvent()">Add Event</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="study-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Create Study Room</h3><button class="modal-close" onclick="closeModal('study-modal')">✕</button>
+      </div>
+      <div class="modal-form">
+        <div class="form-group"><label>Room Name</label><input type="text" placeholder="e.g. DBMS Exam Prep"
+            id="room-name"></div>
+        <div class="form-group"><label>Subject</label><input type="text" placeholder="e.g. Database Management Systems"
+            id="room-subj"></div>
+        <div class="form-group"><label>Location</label><input type="text" placeholder="e.g. Library 2nd Floor, Table 5"
+            id="room-loc"></div>
+        <div class="form-group"><label>Max Members</label><select id="room-max">
+            <option>4</option>
+            <option>6</option>
+            <option>8</option>
+            <option>10</option>
+          </select></div>
+        <div class="form-group"><label>Branch</label><select id="room-branch">
+            <option>CSE</option>
+            <option>ECE</option>
+            <option>AI & DS</option>
+            <option>Mech</option>
+            <option>Open to All</option>
+          </select></div>
+      </div>
+      <button class="btn-primary" onclick="createStudyRoom()">Create Room</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="poll-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Create a Poll</h3><button class="modal-close" onclick="closeModal('poll-modal')">✕</button>
+      </div>
+      <div class="modal-form">
+        <div class="form-group"><label>Question</label><input type="text" placeholder="e.g. Best canteen in campus?"
+            id="poll-q"></div>
+        <div class="form-group">
+          <label>Options</label>
+          <div class="poll-opt-input"><input type="text" placeholder="Option 1" id="poll-opt-1"></div>
+          <div class="poll-opt-input"><input type="text" placeholder="Option 2" id="poll-opt-2"></div>
+          <div class="poll-opt-input"><input type="text" placeholder="Option 3 (optional)" id="poll-opt-3"></div>
+          <div class="poll-opt-input"><input type="text" placeholder="Option 4 (optional)" id="poll-opt-4"></div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="createPoll()">Launch Poll</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="confession-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Post Anonymously 🎭</h3><button class="modal-close" onclick="closeModal('confession-modal')">✕</button>
+      </div>
+      <p style="font-size:0.83rem;color:var(--text-soft);margin-bottom:1.25rem;">Your identity is completely hidden. No
+        logs, no traces.</p>
+      <div class="modal-form">
+        <div class="form-group"><label>Your Confession</label><textarea id="conf-text"
+            placeholder="What's on your mind? Share freely..."></textarea></div>
+        <div class="form-group"><label>Tag</label>
+          <select id="conf-tag">
+            <option value="academic">📚 Academic</option>
+            <option value="hostel">🏠 Hostel Life</option>
+            <option value="social">💬 Social</option>
+            <option value="rant">😤 Rant</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="postConfession()">Post Anonymously</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="lf-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Post Lost / Found Item</h3><button class="modal-close" onclick="closeModal('lf-modal')">✕</button>
+      </div>
+      <div class="modal-form">
+        <div class="form-group"><label>Status</label><select id="lf-status">
+            <option value="lost">🔴 I Lost This</option>
+            <option value="found">🟢 I Found This</option>
+          </select></div>
+        <div class="form-group"><label>Item Name</label><input type="text" placeholder="e.g. Blue Water Bottle"
+            id="lf-item"></div>
+        <div class="form-group"><label>Description</label><textarea id="lf-desc"
+            placeholder="Describe it — color, brand, any details..." style="height:80px;"></textarea></div>
+        <div class="form-group"><label>Location</label><input type="text" placeholder="Where lost/found e.g. CS Lab 3"
+            id="lf-loc"></div>
+        <div class="form-group"><label>Category</label><select id="lf-cat">
+            <option>Electronics</option>
+            <option>Books / Notes</option>
+            <option>Personal Items</option>
+            <option>ID / Cards</option>
+            <option>Clothing</option>
+            <option>Other</option>
+          </select></div>
+      </div>
+      <button class="btn-primary" onclick="postLF()">Post Item</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+
+  </script>
+</body>
 </html>
