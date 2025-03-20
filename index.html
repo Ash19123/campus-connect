@@ -3878,6 +3878,126 @@
   <div id="toast"></div>
 
   <script>
+    // ── STATE ──
+    let currentUser = { name: '', roll: '', initials: '', dept: '', year: '' };
+    let currentSection = 'dashboard';
+    let sectionHistory = [];
+    let currentPostType = 'canon';
+    let chatMode = 'normal';
+    let darkMode = false;
+    let confNum = 9990;
+    let unreadNotifs = 5;
+
+    // ── DATA ──
+    const matchData = [
+      { initials: 'AV', name: 'Arjun Varma', branch: 'CSE', year: '3rd Year', score: 97, interests: ['💻 Coding', '🤖 AI/ML', '🎮 Gaming'], bg: 'var(--maroon-soft)' },
+      { initials: 'SR', name: 'Sneha Reddy', branch: 'AI & DS', year: '3rd Year', score: 94, interests: ['📚 Research', '🎨 Design', '🤖 AI/ML'], bg: '#3A6EA5' },
+      { initials: 'KM', name: 'Kiran Murthy', branch: 'CSE', year: '2nd Year', score: 91, interests: ['🎮 Gaming', '🎵 Music', '💻 Coding'], bg: '#6B4A9A' },
+      { initials: 'RJ', name: 'Riya Joshi', branch: 'ECE', year: '3rd Year', score: 88, interests: ['🎵 Music', '🎨 Design', '📸 Photo'], bg: '#A5523A' },
+      { initials: 'DK', name: 'Dev Kumar', branch: 'CSE', year: '4th Year', score: 85, interests: ['💻 Coding', '🏋️ Fitness', '⚽ Sports'], bg: '#2A7A3A' },
+      { initials: 'MS', name: 'Mansi Shah', branch: 'AI & DS', year: '2nd Year', score: 83, interests: ['🤖 AI/ML', '📚 Research', '✈️ Travel'], bg: '#7A4A8A' },
+      { initials: 'VR', name: 'Vikram Rao', branch: 'Mech', year: '3rd Year', score: 79, interests: ['⚽ Sports', '🏋️ Fitness', '🎮 Gaming'], bg: '#8A6A2A' },
+      { initials: 'PL', name: 'Preethi Laxmi', branch: 'CSE', year: '3rd Year', score: 76, interests: ['🎨 Design', '📸 Photo', '💻 Coding'], bg: '#5A3A7A' },
+    ];
+    const notesData = [
+      { icon: '📊', bg: '#FFF3D0', title: 'DBMS Complete Notes', sub: 'Database Management Systems', branch: 'CSE', semester: '5th Sem', downloads: 234, rating: '4.8', uploader: 'Rahul M' },
+      { icon: '🔢', bg: '#E8F4FF', title: 'Linear Algebra Full Set', sub: 'Engineering Mathematics', branch: 'All', semester: '3rd Sem', downloads: 189, rating: '4.7', uploader: 'Deepika P' },
+      { icon: '💻', bg: 'var(--maroon-tint)', title: 'OS Concepts & Practicals', sub: 'Operating Systems', branch: 'CSE', semester: '5th Sem', downloads: 167, rating: '4.6', uploader: 'Vikram C' },
+      { icon: '⚡', bg: '#E8FFE8', title: 'Circuit Theory Notes', sub: 'Electrical Networks', branch: 'ECE', semester: '3rd Sem', downloads: 134, rating: '4.5', uploader: 'Meera S' },
+      { icon: '🤖', bg: '#F0E8FF', title: 'ML Algorithms Cheatsheet', sub: 'Machine Learning', branch: 'AI & DS', semester: '6th Sem', downloads: 198, rating: '4.9', uploader: 'Arjun V' },
+      { icon: '📐', bg: '#FFF0E0', title: 'Engineering Drawing Tips', sub: 'ED Techniques', branch: 'All', semester: '2nd Sem', downloads: 112, rating: '4.3', uploader: 'Riya J' },
+    ];
+    const seniorData = [
+      { initials: 'NK', name: 'Nikhil Krishnamurthy', branch: 'CSE 4th Year', expertise: ['FAANG Prep', 'Leetcode', 'DSA'], rating: '4.9', reviews: 28, badge: 'yr4', placed: 'Google SWE', bg: 'var(--maroon-soft)' },
+      { initials: 'AS', name: 'Ananya Sharma', branch: 'AI & DS 4th Year', expertise: ['ML Research', 'Papers', 'Internships'], rating: '4.8', reviews: 22, badge: 'yr4', placed: 'IIT Research Intern', bg: '#3A6EA5' },
+      { initials: 'RP', name: 'Rohit Prasad', branch: 'CSE 3rd Year', expertise: ['Web Dev', 'React', 'Node.js'], rating: '4.7', reviews: 18, badge: 'yr3', placed: 'Microsoft Intern', bg: '#6B4A9A' },
+      { initials: 'SP', name: 'Shreya Pillai', branch: 'ECE 4th Year', expertise: ['GATE', 'VLSI', 'Embedded'], rating: '4.8', reviews: 15, badge: 'yr4', placed: 'GATE AIR 112', bg: '#A5523A' },
+      { initials: 'VN', name: 'Vishal Nair', branch: 'CSE 3rd Year', expertise: ['Startups', 'Product', 'VC'], rating: '4.6', reviews: 12, badge: 'yr3', placed: 'Co-Founded Startup', bg: '#2A7A3A' },
+      { initials: 'MK', name: 'Meghna Kaur', branch: 'AI & DS 3rd Year', expertise: ['GRE', 'MS Abroad', 'SOP'], rating: '4.7', reviews: 19, badge: 'yr3', placed: 'MS @ UT Austin', bg: '#7A4A8A' },
+    ];
+    const activityData = [
+      { user: 'Aditya Kumar', initials: 'AK', bg: 'var(--maroon-soft)', type: 'canteen', typeLabel: '🍔 Canteen', msg: 'Heading to the main canteen for lunch — anyone want to come? 😄', time: '2 min ago', joins: 2 },
+      { user: 'Meera Subramaniam', initials: 'MS', bg: '#3A6EA5', type: 'study', typeLabel: '📖 Study', msg: 'Starting a DBMS study session in Library 2nd floor — 4 seats available! Exam is in 3 days 😅', time: '15 min ago', joins: 4 },
+      { user: 'Sports Club', initials: 'SC', bg: '#2A7A3A', type: 'sport', typeLabel: '⚽ Sport', msg: 'Friendly cricket match at the ground today at 5PM. We need 3 more players to make up the team!', time: '32 min ago', joins: 7 },
+      { user: 'Riya Joshi', initials: 'RJ', bg: '#A5523A', type: 'event', typeLabel: '🎉 Event', msg: 'Attending the Tech Fest hackathon orientation at 3PM in Seminar Hall. Anyone want to come together?', time: '1 hr ago', joins: 5 },
+    ];
+    const leaderboardData = [
+      { initials: 'RM', bg: 'var(--maroon-soft)', name: 'Rahul Menon', notes: 28, pts: 820 },
+      { initials: 'DP', bg: '#3A6EA5', name: 'Deepika P', notes: 22, pts: 680 },
+      { initials: 'VC', bg: '#6B4A9A', name: 'Vikram C', notes: 19, pts: 590 },
+      { initials: 'AS', bg: '#A5523A', name: 'Ananya S', notes: 16, pts: 480 },
+      { initials: 'AV', bg: '#2A7A3A', name: 'Arjun V', notes: 15, pts: 450 },
+    ];
+    const chatData = [
+      { initials: 'AV', bg: 'var(--maroon-soft)', name: 'Arjun Varma', preview: "Absolutely! Let's meet in the CS lab", time: '10:38 AM', unread: true },
+      { initials: 'SR', bg: '#3A6EA5', name: 'Sneha Reddy', preview: 'Hey! Did you see the match percentage?', time: '9:15 AM', unread: true },
+      { initials: 'GR', bg: '#6B4A9A', name: 'CSE 3rd Year Group', preview: 'Vikram: notes for tomorrow?', time: 'Yesterday', unread: false },
+      { initials: 'KM', bg: '#A5523A', name: 'Kiran Murthy', preview: 'See you at the hackathon!', time: 'Yesterday', unread: false },
+      { initials: '📢', bg: 'var(--maroon)', name: 'Campus Announcements', preview: 'New library timing from Monday...', time: 'Mon', unread: false },
+    ];
+    const eventsData = [
+      { day: 27, month: 'APR', title: 'TechFest Hackathon 2026', venue: 'Main Auditorium · 9 AM – 9 PM', cat: 'tech', catLabel: '🖥️ Tech', rsvp: false },
+      { day: 28, month: 'APR', title: 'Cultural Night – Raga & Rhythm', venue: 'Open Air Stage · 6 PM', cat: 'cultural', catLabel: '🎭 Cultural', rsvp: false },
+      { day: 29, month: 'APR', title: 'Inter-College Cricket', venue: 'Sports Ground · 10 AM', cat: 'sports', catLabel: '⚽ Sports', rsvp: false },
+      { day: 30, month: 'APR', title: 'Guest Lecture: AI in Healthcare', venue: 'Seminar Hall A · 3 PM', cat: 'academic', catLabel: '📚 Academic', rsvp: false },
+      { day: 2, month: 'MAY', title: 'End Semester Exam Schedule', venue: 'Notice Board + App', cat: 'academic', catLabel: '📚 Academic', rsvp: false },
+    ];
+    const studyRoomsData = [
+      { icon: '📊', bg: '#FFF3D0', name: 'DBMS Exam Prep', subject: 'Database Management Systems', loc: 'Library · 2nd Floor', time: '2:00 PM – 6:00 PM', branch: 'CSE', max: 6, members: [{ i: 'AV', bg: 'var(--maroon-soft)' }, { i: 'SR', bg: '#3A6EA5' }, { i: 'KM', bg: '#6B4A9A' }], live: true },
+      { icon: '🤖', bg: '#E8F4FF', name: 'ML Paper Review', subject: 'Machine Learning', loc: 'CS Lab 2', time: '3:30 PM – 7:00 PM', branch: 'AI & DS', max: 8, members: [{ i: 'MS', bg: '#7A4A8A' }, { i: 'DK', bg: '#2A7A3A' }], live: true },
+      { icon: '⚡', bg: '#E8FFE8', name: 'Circuit Theory Drill', subject: 'Electronic Circuits', loc: 'ECE Seminar Room', time: '4:00 PM – 8:00 PM', branch: 'ECE', max: 6, members: [{ i: 'RJ', bg: '#A5523A' }, { i: 'PL', bg: '#5A3A7A' }], live: true },
+      { icon: '🔢', bg: '#F0E8FF', name: 'Linear Algebra Revision', subject: 'Engineering Mathematics', loc: 'Maths Dept Reading Room', time: 'Tomorrow · 10 AM', branch: 'Open to All', max: 10, members: [{ i: 'DP', bg: '#3A6EA5' }], live: false },
+    ];
+    const pollsData = [
+      { q: 'What should be the canteen menu improvement?', opts: ['More South Indian', 'More North Indian', 'Healthier choices', 'Better desserts'], votes: [120, 85, 210, 60], total: 475, voted: -1, creator: 'Student Council', time: '2 hr ago' },
+      { q: 'Best time for the Annual Sports Day?', opts: ['November', 'December', 'January', 'February'], votes: [180, 220, 150, 90], total: 640, voted: -1, creator: 'Sports Committee', time: '5 hr ago' },
+      { q: 'Should library extend to 11 PM?', opts: ['Yes definitely!', 'Yes weekdays only', 'No 9 PM is fine', 'Need 24hr access'], votes: [310, 195, 45, 280], total: 830, voted: -1, creator: 'Student Body', time: '1 day ago' },
+    ];
+    const confessionsData = [
+      { id: 'Anon #4821', icon: '😅', tag: 'academic', tagLabel: '📚 Academic', text: "I genuinely don't understand half of what's in the Networks syllabus and the exam is in 5 days. I've been watching the same 3 YouTube videos on repeat. Send help.", time: '12 min ago', likes: 47, relatable: 89 },
+      { id: 'Anon #2947', icon: '🏠', tag: 'hostel', tagLabel: '🏠 Hostel', text: "My roommate snores so loud I genuinely believe our room has its own weather system. I've considered relocating to the library at night.", time: '1 hr ago', likes: 156, relatable: 203 },
+      { id: 'Anon #7734', icon: '💬', tag: 'social', tagLabel: '💬 Social', text: "I saw my crush in the canteen today and immediately turned around and left without eating. I was there for 30 minutes waiting in line.", time: '2 hr ago', likes: 234, relatable: 312 },
+      { id: 'Anon #1156', icon: '😤', tag: 'rant', tagLabel: '😤 Rant', text: "The campus WiFi speeds during submission deadlines should be classified as a human rights violation. I don't make the rules.", time: '4 hr ago', likes: 410, relatable: 589 },
+      { id: 'Anon #3302', icon: '📚', tag: 'academic', tagLabel: '📚 Academic', text: "I thought I understood pointers in C. I was wrong. I am still wrong. I will always be wrong.", time: 'Yesterday', likes: 178, relatable: 267 },
+      { id: 'Anon #9981', icon: '💬', tag: 'social', tagLabel: '💬 Social', text: "To the person who always saves seats in the library with just a water bottle — I respect the hustle, I despise the practice.", time: 'Yesterday', likes: 302, relatable: 445 },
+    ];
+    const lfData = [
+      { icon: '🎧', status: 'lost', statusLabel: 'Lost', title: 'Sony WH-1000XM4 Headphones', desc: 'Black headphones in a black case. Last seen near CS Lab 3.', loc: 'CS Lab Building', cat: 'Electronics', time: '2 hr ago' },
+      { icon: '📔', status: 'found', statusLabel: 'Found', title: 'Blue Notebook – OS Notes', desc: 'Found near bench outside Library block. Has "Meera" written on cover.', loc: 'Library Entrance', cat: 'Books', time: '3 hr ago' },
+      { icon: '🪪', status: 'found', statusLabel: 'Found', title: 'Student ID Card', desc: 'Found in the canteen. Name: Rajesh Kumar. 2nd year ECE.', loc: 'Main Canteen', cat: 'ID / Cards', time: '5 hr ago' },
+      { icon: '⌚', status: 'lost', statusLabel: 'Lost', title: 'Fastrack Wrist Watch (Silver)', desc: 'Silver analog watch, lost between hostel block and main building.', loc: 'Hostel Block A area', cat: 'Personal Items', time: 'Yesterday' },
+      { icon: '📱', status: 'claimed', statusLabel: 'Claimed', title: 'Poco Phone – Black', desc: 'Phone was lost in seminar hall, returned to owner. Closed.', loc: 'Seminar Hall B', cat: 'Electronics', time: '2 days ago' },
+      { icon: '🎒', status: 'lost', statusLabel: 'Lost', title: 'Grey Backpack (Wildcraft)', desc: 'Grey Wildcraft bag with laptop inside (Dell). Very important. Please help!', loc: 'Cafeteria', cat: 'Personal Items', time: '1 hr ago' },
+    ];
+    const notifData = [
+      { icon: '✨', text: 'Arjun Varma sent you a connection request!', time: '2 min ago', unread: true },
+      { icon: '📥', text: 'Your OS Notes were downloaded 5 times today — you earned +25 pts!', time: '15 min ago', unread: true },
+      { icon: '📖', text: 'DBMS Exam Prep study room is now live. Join now!', time: '32 min ago', unread: true },
+      { icon: '🎉', text: 'TechFest Hackathon starts in 3 days. You RSVPed — don\'t forget!', time: '2 hr ago', unread: true },
+      { icon: '💬', text: 'Sneha Reddy replied to your message.', time: '4 hr ago', unread: true },
+      { icon: '🏆', text: 'You moved up to Rank #7 on the leaderboard!', time: 'Yesterday', unread: false },
+      { icon: '📢', text: 'New announcement: Library closing at 10 PM from Monday.', time: 'Yesterday', unread: false },
+    ];
+
+    // ── SPLASH ──
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('splash').classList.add('hide');
+      }, 2200);
+    });
+
+    // ── LIVE CLOCK ──
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+      const dateStr = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', weekday: 'short' });
+      ['live-time', 'ev-live-time'].forEach(id => { const el = document.getElementById(id); if (el) el.textContent = timeStr; });
+      const ld = document.getElementById('live-date'); if (ld) ld.textContent = dateStr;
+      // Update greeting
+      const hour = now.getHours();
+      const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+      const first = currentUser.name ? currentUser.name.split(' ')[0] : '';
+      const gEl = document.getElementById('dashboard-greeting');
 
   </script>
 </body>
