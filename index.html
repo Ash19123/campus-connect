@@ -3998,6 +3998,306 @@
       const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
       const first = currentUser.name ? currentUser.name.split(' ')[0] : '';
       const gEl = document.getElementById('dashboard-greeting');
+      if (gEl && first) gEl.innerHTML = `${greet}, ${first} <span class="greeting-wave">👋</span>`;
+      else if (gEl) gEl.innerHTML = `${greet} <span class="greeting-wave">👋</span>`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ── NOTIFICATIONS ──
+    function renderNotifications() {
+      document.getElementById('notif-list').innerHTML = notifData.map((n, i) => `
+    <div class="notif-item ${n.unread ? 'unread' : ''}" onclick="readNotif(${i})">
+      <div class="notif-icon">${n.icon}</div>
+      <div class="notif-body">
+        <div class="notif-text">${n.text}</div>
+        <div class="notif-time">${n.time}</div>
+      </div>
+    </div>`).join('');
+      const cnt = notifData.filter(n => n.unread).length;
+      document.getElementById('notif-count').textContent = cnt;
+      document.getElementById('notif-count').style.display = cnt ? 'flex' : 'none';
+    }
+    function readNotif(i) { notifData[i].unread = false; renderNotifications(); }
+    function markAllRead() { notifData.forEach(n => n.unread = false); renderNotifications(); showToast('✓ All notifications marked as read'); closeNotifPanel(); }
+    function toggleNotifPanel() { document.getElementById('notif-panel').classList.toggle('open'); }
+    function closeNotifPanel() { document.getElementById('notif-panel').classList.remove('open'); }
+    document.addEventListener('click', e => {
+      const w = document.querySelector('.notif-wrapper');
+      if (w && !w.contains(e.target)) closeNotifPanel();
+      if (e.target.classList.contains('modal-overlay')) e.target.classList.remove('open');
+    });
+
+    // ── AUTH ──
+    function switchAuthTab(tab, btn) {
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+    function toggleInterest(el) { el.classList.toggle('selected'); }
+    function getInitials(name) {
+      return name.trim().split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    }
+    function doLogin() {
+      const name = document.getElementById('login-name').value.trim();
+      const roll = document.getElementById('login-roll').value.trim();
+      const pass = document.getElementById('login-pass').value.trim();
+      if (!name) { showToast('⚠️ Please enter your name'); return; }
+      if (!roll) { showToast('⚠️ Please enter your roll number'); return; }
+      if (!pass) { showToast('⚠️ Please enter your password'); return; }
+      const dept = 'Computer Science & Engineering';
+      const year = '3rd Year';
+      transitionToApp(name, roll, dept, year);
+    }
+    function doSignup() {
+      const name = document.getElementById('su-name').value.trim();
+      const roll = document.getElementById('su-roll').value.trim();
+      const dept = document.getElementById('su-dept').value;
+      const year = document.getElementById('su-year').value;
+      if (!name) { showToast('⚠️ Please enter your name'); return; }
+      if (!roll) { showToast('⚠️ Please enter your roll number'); return; }
+      if (document.querySelectorAll('.interest-chip.selected').length < 3) { showToast('⚠️ Pick at least 3 interests!'); return; }
+      transitionToApp(name, roll, dept, year);
+    }
+    function transitionToApp(name, roll, dept, year) {
+      currentUser = { name, roll, initials: getInitials(name), dept, year };
+      // Show transition overlay
+      const lt = document.getElementById('login-transition');
+      document.getElementById('lt-welcome-text').textContent = `Welcome, ${name.split(' ')[0]}! 🎉`;
+      lt.classList.add('show');
+      setTimeout(() => {
+        lt.classList.remove('show');
+        document.getElementById('page-auth').classList.remove('active');
+        document.getElementById('page-app').classList.add('active');
+        updateUserUI();
+        renderAll();
+        showToast(`🎉 Welcome to Campus Connect, ${name.split(' ')[0]}!`);
+      }, 2000);
+    }
+    function updateUserUI() {
+      const { name, roll, initials, dept, year } = currentUser;
+      // Sidebar
+      document.getElementById('sidebar-name').textContent = name;
+      document.getElementById('sidebar-roll').textContent = `${roll} · ${year}`;
+      document.getElementById('sidebar-avatar').textContent = initials;
+      // Post avatar
+      const pa = document.getElementById('post-avatar');
+      if (pa) { pa.textContent = initials; }
+      // Profile
+      document.getElementById('profile-name-display').textContent = name;
+      document.getElementById('profile-roll-display').textContent = `${roll} · ${dept} · ${year} · Amrita Vishwa Vidyapeetham, Amaravati`;
+      document.getElementById('profile-avatar-xl').textContent = initials;
+      // Timetable label
+      const deptShort = dept.includes('Computer') ? 'CSE' : dept.includes('Electronic') ? 'ECE' : dept.includes('AI') ? 'AI & DS' : 'ENG';
+      const ttl = document.getElementById('tt-section-label');
+      if (ttl) ttl.textContent = `📍 ${deptShort} · ${year} · Sec B`;
+      // Greeting
+      updateClock();
+    }
+    function doLogout() {
+      document.getElementById('page-app').classList.remove('active');
+      document.getElementById('page-auth').classList.add('active');
+      currentUser = { name: '', roll: '', initials: '', dept: '', year: '' };
+      sectionHistory = [];
+    }
+
+    // ── DARK MODE ──
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      showToast('🎨 Theme changed to ' + theme);
+      closeModal('theme-modal');
+    }
+
+    function openEditProfileModal() {
+      document.getElementById('edit-name').value = currentUser.name || '';
+      document.getElementById('edit-roll').value = currentUser.roll || '';
+      if (currentUser.dept) document.getElementById('edit-dept').value = currentUser.dept;
+      if (currentUser.year) document.getElementById('edit-year').value = currentUser.year;
+      openModal('edit-profile-modal');
+    }
+
+    function saveProfile() {
+      const name = document.getElementById('edit-name').value.trim();
+      const roll = document.getElementById('edit-roll').value.trim();
+      const dept = document.getElementById('edit-dept').value;
+      const year = document.getElementById('edit-year').value;
+
+      if (!name) { showToast('⚠️ Please enter your name'); return; }
+      if (!roll) { showToast('⚠️ Please enter your roll number'); return; }
+
+      currentUser.name = name;
+      currentUser.roll = roll;
+      currentUser.initials = getInitials(name);
+      currentUser.dept = dept;
+      currentUser.year = year;
+
+      updateUserUI();
+      closeModal('edit-profile-modal');
+      showToast('✅ Profile updated successfully!');
+    }
+
+    function toggleDark() {
+      darkMode = !darkMode;
+      document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+      document.getElementById('dark-btn').textContent = darkMode ? '☀️' : '🌙';
+      showToast(darkMode ? '🌙 Dark mode on' : '☀️ Light mode on');
+    }
+
+    // ── NAVIGATION ──
+    function showSection(id) {
+      if (id !== currentSection) sectionHistory.push(currentSection);
+      currentSection = id;
+      document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const sec = document.getElementById('section-' + id);
+      if (sec) sec.classList.add('active');
+      const sectionMap = { dashboard: 'dashboard', matches: 'match', chat: 'messages', notes: 'notes hub', seniors: 'seniors', activity: 'activity', events: 'events', studyrooms: 'study rooms', timetable: 'timetable', polls: 'polls', confessions: 'confessions', lostandfound: 'lost', profile: 'profile' };
+      document.querySelectorAll('.nav-item').forEach(n => {
+        const txt = n.textContent.toLowerCase();
+        const key = sectionMap[id] || id;
+        if (txt.includes(key)) n.classList.add('active');
+      });
+      if (id === 'events') renderCalendar();
+      if (id === 'dashboard') renderDashboard();
+      closeSidebar();
+      window.scrollTo(0, 0);
+    }
+    function goBack() {
+      if (sectionHistory.length > 0) {
+        const prev = sectionHistory.pop();
+        currentSection = prev;
+        document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const sec = document.getElementById('section-' + prev);
+        if (sec) sec.classList.add('active');
+        const sectionMap = { dashboard: 'dashboard', matches: 'match', chat: 'messages', notes: 'notes hub', seniors: 'seniors', activity: 'activity', events: 'events', studyrooms: 'study rooms', timetable: 'timetable', polls: 'polls', confessions: 'confessions', lostandfound: 'lost', profile: 'profile' };
+        document.querySelectorAll('.nav-item').forEach(n => {
+          const txt = n.textContent.toLowerCase();
+          const key = sectionMap[prev] || prev;
+          if (txt.includes(key)) n.classList.add('active');
+        });
+        if (prev === 'events') renderCalendar();
+        window.scrollTo(0, 0);
+      } else {
+        showSection('dashboard');
+      }
+    }
+
+    // ── SIDEBAR (MOBILE) ──
+    function openSidebar() {
+      document.getElementById('main-sidebar').classList.add('open');
+      document.getElementById('sidebar-overlay').classList.add('show');
+    }
+    function closeSidebar() {
+      document.getElementById('main-sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('show');
+    }
+
+    // ── RENDER ALL ──
+    function renderAll() {
+      renderDashboard();
+      renderMatches();
+      renderNotes();
+      renderSeniors();
+      renderActivity();
+      renderChatList();
+      renderLeaderboard();
+      renderEvents();
+      renderStudyRooms();
+      renderTimetable();
+      renderPolls();
+      renderConfessions();
+      renderLF();
+      renderNotifications();
+    }
+
+    function renderDashboard() {
+      // Top matches
+      const dm = document.getElementById('dash-matches');
+      if (dm) dm.innerHTML = matchData.slice(0, 3).map(m => `
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem 0;border-bottom:1px solid var(--border);">
+      <div class="avatar" style="background:${m.bg};">${m.initials}</div>
+      <div style="flex:1;"><div style="font-weight:600;font-size:0.88rem;">${m.name}</div><div style="font-size:0.72rem;color:var(--text-soft);">${m.branch} · ${m.year}</div></div>
+      <span style="background:${m.score >= 90 ? '#1A7A4A' : 'var(--maroon)'};color:white;font-size:0.68rem;font-weight:700;padding:3px 7px;border-radius:20px;">${m.score}%</span>
+    </div>`).join('');
+      // Events
+      const de = document.getElementById('dash-events');
+      if (de) de.innerHTML = eventsData.slice(0, 3).map(e => `
+    <div style="display:flex;gap:0.75rem;align-items:center;">
+      <div style="background:var(--maroon);color:white;border-radius:8px;padding:0.4rem 0.55rem;text-align:center;min-width:44px;flex-shrink:0;">
+        <div style="font-size:1.1rem;font-weight:700;line-height:1;">${e.day}</div>
+        <div style="font-size:0.58rem;letter-spacing:1px;">${e.month}</div>
+      </div>
+      <div style="flex:1;"><div style="font-weight:600;font-size:0.85rem;">${e.title}</div><div style="font-size:0.72rem;color:var(--text-soft);">${e.venue}</div></div>
+      <span class="event-badge ev-${e.cat}">${e.catLabel}</span>
+    </div>`).join('');
+      // Activity
+      const da = document.getElementById('dash-activity');
+      if (da) da.innerHTML = activityData.slice(0, 3).map((a, i) => `
+    <div style="display:flex;align-items:center;gap:0.75rem;padding:0.5rem;background:var(--page-bg);border-radius:var(--radius-sm);">
+      <span style="font-size:1.2rem;">${a.type === 'canteen' ? '🍔' : a.type === 'study' ? '📖' : a.type === 'sport' ? '⚽' : '🎉'}</span>
+      <div style="flex:1;"><span style="font-weight:600;font-size:0.85rem;">${a.user}</span> <span style="color:var(--text-soft);font-size:0.82rem;">— ${a.msg.slice(0, 60)}...</span></div>
+      <button class="join-btn" onclick="joinActivity(this)">Join</button>
+    </div>`).join('');
+    }
+
+    function renderMatches() {
+      const g = document.getElementById('matches-grid');
+      if (!g) return;
+      g.innerHTML = matchData.map(m => `
+    <div class="match-card fade-in">
+      <div class="match-score ${m.score >= 90 ? 'high' : ''}">${m.score}%</div>
+      <div class="match-top">
+        <div class="avatar-lg" style="background:${m.bg};">${m.initials}</div>
+        <div><div style="font-weight:600;font-size:0.95rem;">${m.name}</div><div style="font-size:0.75rem;color:var(--text-soft);margin-top:2px;">${m.branch} · ${m.year}</div></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.5rem;">${m.interests.map(i => `<span class="tag">${i}</span>`).join('')}</div>
+      <button class="connect-btn" onclick="connectStudent(this,'${m.name}')">+ Connect</button>
+    </div>`).join('');
+    }
+
+    function renderNotes() {
+      const g = document.getElementById('notes-grid');
+      if (!g) return;
+      g.innerHTML = notesData.map(n => `
+    <div class="note-card fade-in">
+      <div class="note-icon" style="background:${n.bg};">${n.icon}</div>
+      <div class="note-title">${n.title}</div>
+      <div class="note-meta">${n.sub} · ${n.branch} · ${n.semester}</div>
+      <div class="note-stats"><span>📥 ${n.downloads}</span><span>⭐ ${n.rating}</span><span>👤 ${n.uploader}</span></div>
+      <button class="download-btn" onclick="downloadNote(this,'${n.title}')">📥 Download (Free)</button>
+    </div>`).join('');
+    }
+
+    function renderSeniors() {
+      const g = document.getElementById('seniors-grid');
+      if (!g) return;
+      g.innerHTML = seniorData.map(s => `
+    <div class="senior-card fade-in">
+      <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+        <div style="width:50px;height:50px;border-radius:50%;background:${s.bg};display:flex;align-items:center;justify-content:center;font-size:1.05rem;font-weight:700;color:white;flex-shrink:0;">${s.initials}</div>
+        <div style="flex:1;"><div style="font-weight:600;font-size:0.92rem;">${s.name}</div><div style="font-size:0.72rem;color:var(--text-soft);margin-top:2px;">${s.branch}</div><div style="font-size:0.7rem;color:var(--maroon);font-weight:600;margin-top:3px;">✅ ${s.placed}</div></div>
+        <span class="senior-badge ${s.badge}">${s.badge === 'yr4' ? '4th Year' : s.badge === 'yr3' ? '3rd Year' : '2nd Year'}</span>
+      </div>
+      <div class="expertise-tags">${s.expertise.map(e => `<span class="exp-tag">${e}</span>`).join('')}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="rating"><span class="stars">★★★★★</span> ${s.rating} (${s.reviews})</div>
+        <button class="connect-btn" style="width:auto;padding:0.35rem 0.85rem;margin-top:0;" onclick="showToast('💬 Opening chat with ${s.name}...')">Message</button>
+      </div>
+    </div>`).join('');
+    }
+
+    function renderActivity() {
+      const g = document.getElementById('activity-feed');
+      if (!g) return;
+      g.innerHTML = activityData.map(a => `
+    <div class="activity-post fade-in">
+      <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+        <div style="width:38px;height:38px;border-radius:50%;background:${a.bg};display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:0.82rem;flex-shrink:0;">${a.initials}</div>
+        <div style="flex:1;"><div style="font-weight:600;font-size:0.88rem;">${a.user}</div><div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">${a.time}</div></div>
+        <span class="activity-type type-${a.type}">${a.typeLabel}</span>
 
   </script>
 </body>
