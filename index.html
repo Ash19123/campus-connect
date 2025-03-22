@@ -4298,7 +4298,362 @@
         <div style="width:38px;height:38px;border-radius:50%;background:${a.bg};display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:0.82rem;flex-shrink:0;">${a.initials}</div>
         <div style="flex:1;"><div style="font-weight:600;font-size:0.88rem;">${a.user}</div><div style="font-size:0.7rem;color:var(--text-muted);margin-top:2px;">${a.time}</div></div>
         <span class="activity-type type-${a.type}">${a.typeLabel}</span>
+      </div>
+      <div class="post-msg">${a.msg}</div>
+      <div style="display:flex;align-items:center;gap:1rem;"><span style="font-size:0.73rem;color:var(--text-muted);">👥 ${a.joins} joining</span><button class="join-btn" onclick="joinActivity(this)">Join</button></div>
+    </div>`).join('');
+    }
 
+    function renderChatList() {
+      const g = document.getElementById('chat-list');
+      if (!g) return;
+      g.innerHTML = chatData.map((c, i) => `
+    <div class="chat-item ${i === 0 ? 'active' : ''}" onclick="selectChat(this,'${c.name}','${c.initials}','${c.bg}')">
+      <div class="chat-avatar" style="background:${c.bg};">${c.initials}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="chat-name">${c.name} ${c.unread ? '<span style="width:7px;height:7px;background:var(--maroon-soft);border-radius:50%;display:inline-block;margin-left:4px;vertical-align:middle;"></span>' : ''}</div>
+        <div class="chat-preview">${c.preview}</div>
+      </div>
+      <div class="chat-time">${c.time}</div>
+    </div>`).join('');
+    }
+
+    function renderLeaderboard() {
+      const g = document.getElementById('leaderboard-full');
+      if (!g) return;
+      const all = [...leaderboardData, { initials: currentUser.initials || '??', bg: 'var(--gold)', name: (currentUser.name || 'You') + ' (You)', notes: 12, pts: 340, isMe: true }];
+      all.sort((a, b) => b.pts - a.pts);
+      g.innerHTML = all.map((l, i) => `
+    <div class="leaderboard-item">
+      <div class="rank ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : 'other'}">${i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1}</div>
+      <div style="width:32px;height:32px;border-radius:50%;background:${l.bg};display:flex;align-items:center;justify-content:center;font-weight:700;color:${l.isMe ? 'var(--maroon-dark)' : 'white'};font-size:0.75rem;flex-shrink:0;">${l.initials}</div>
+      <div style="flex:1;"><div style="font-size:0.85rem;font-weight:${l.isMe ? '700' : '600'};color:${l.isMe ? 'var(--maroon)' : 'var(--text-dark)'};">${l.name}</div><div style="font-size:0.7rem;color:var(--text-soft);">${l.notes} notes</div></div>
+      <span class="lb-pts" style="${l.isMe ? 'color:var(--gold);' : ''}">${l.pts}</span>
+      <div class="lb-bar"><div class="lb-fill" style="width:${Math.round(l.pts / 8.2)}%"></div></div>
+    </div>`).join('');
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('cal-grid');
+      if (!grid) return;
+      const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+      const eventDays = [27, 28, 29, 30];
+      let html = days.map(d => `<div class="cal-day-header">${d}</div>`).join('');
+      const startDay = 3;
+      for (let i = 0; i < startDay; i++) html += `<div class="cal-day other-month"><div class="day-num">${28 + i}</div></div>`;
+      for (let d = 1; d <= 30; d++) {
+        const isToday = d === 24;
+        const hasEv = eventDays.includes(d);
+        html += `<div class="cal-day ${isToday ? 'today' : ''} ${hasEv ? 'has-event' : ''}" onclick="showToast('📅 ${d} April 2026')"><div class="day-num">${d}</div></div>`;
+      }
+      grid.innerHTML = html;
+      const lbl = document.getElementById('cal-month-label');
+      if (lbl) lbl.textContent = 'April 2026';
+    }
+
+    function renderEvents() {
+      const g = document.getElementById('events-list');
+      if (!g) return;
+      g.innerHTML = eventsData.map(e => `
+    <div class="event-card fade-in">
+      <div class="event-date-box"><div class="ev-day">${e.day}</div><div class="ev-month">${e.month}</div></div>
+      <div class="event-info" style="flex:1;">
+        <h4>${e.title}</h4>
+        <p>📍 ${e.venue}</p>
+        <span class="event-badge ev-${e.cat}">${e.catLabel}</span>
+      </div>
+      <button class="rsvp-btn ${e.rsvp ? 'rsvped' : ''}" onclick="rsvpEvent(this)">${e.rsvp ? '✓ Going' : 'RSVP'}</button>
+    </div>`).join('');
+    }
+
+    function renderStudyRooms() {
+      const g = document.getElementById('study-rooms-grid');
+      if (!g) return;
+      g.innerHTML = studyRoomsData.map(r => `
+    <div class="study-room-card fade-in">
+      <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+        <div class="room-icon" style="background:${r.bg};">${r.icon}</div>
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+            <div class="room-title">${r.name}</div>
+            ${r.live ? '<div class="live-badge"><div class="live-dot"></div>Live</div>' : '<span style="font-size:0.65rem;color:var(--text-muted);font-weight:600;">Scheduled</span>'}
+          </div>
+          <div class="room-subject">${r.subject}</div>
+        </div>
+      </div>
+      <div class="room-meta"><span>📍 ${r.loc}</span><span>⏰ ${r.time}</span><span>🏷️ ${r.branch}</span></div>
+      <div style="display:flex;align-items:center;margin-bottom:0.75rem;">
+        ${r.members.map(m => `<div class="room-member-av" style="background:${m.bg};">${m.i}</div>`).join('')}
+        <span class="room-member-count">${r.members.length}/${r.max}</span>
+      </div>
+      <button class="join-room-btn" onclick="joinRoom(this,'${r.name}')">🚪 Join Room</button>
+    </div>`).join('');
+    }
+
+    function renderTimetable() {
+      const table = document.getElementById('timetable-table');
+      if (!table) return;
+      const days = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+      const slots = [
+        { time: '9:00 AM', classes: { Monday: { n: 'Data Structures', r: 'CS-101', t: '' }, Tuesday: { n: 'OS Lab', r: 'CS-Lab2', t: 'lab' }, Wednesday: { n: 'DBMS', r: 'CS-201', t: '' }, Thursday: { n: 'Free', r: '', t: 'free' }, Friday: { n: 'DSA', r: 'CS-101', t: '' } } },
+        { time: '10:00 AM', classes: { Monday: { n: 'DBMS', r: 'CS-201', t: '' }, Tuesday: { n: 'Maths', r: 'LH-3', t: '' }, Wednesday: { n: 'OS', r: 'CS-301', t: '' }, Thursday: { n: 'Networks', r: 'CS-401', t: '' }, Friday: { n: 'Maths', r: 'LH-3', t: '' } } },
+        { time: '11:00 AM', classes: { Monday: { n: 'Free', r: '', t: 'free' }, Tuesday: { n: 'DBMS', r: 'CS-201', t: '' }, Wednesday: { n: 'Free', r: '', t: 'free' }, Thursday: { n: 'OS', r: 'CS-301', t: '' }, Friday: { n: 'Networks', r: 'CS-401', t: '' } } },
+        { time: '12:00 PM', classes: { Monday: { n: 'Networks', r: 'CS-401', t: '' }, Tuesday: { n: 'Free', r: '', t: 'free' }, Wednesday: { n: 'Maths', r: 'LH-3', t: '' }, Thursday: { n: 'DBMS Lab', r: 'CS-Lab1', t: 'lab' }, Friday: { n: 'Free', r: '', t: 'free' } } },
+        { time: '2:00 PM', classes: { Monday: { n: 'OS', r: 'CS-301', t: '' }, Tuesday: { n: 'Networks Lab', r: 'CS-Lab3', t: 'lab' }, Wednesday: { n: 'Data Structures', r: 'CS-101', t: '' }, Thursday: { n: 'Free', r: '', t: 'free' }, Friday: { n: 'OS Lab', r: 'CS-Lab2', t: 'lab' } } },
+        { time: '3:00 PM', classes: { Monday: { n: 'Maths', r: 'LH-3', t: '' }, Tuesday: { n: 'Free', r: '', t: 'free' }, Wednesday: { n: 'Networks', r: 'CS-401', t: '' }, Thursday: { n: 'Data Structures', r: 'CS-101', t: '' }, Friday: { n: 'Free', r: '', t: 'free' } } },
+      ];
+      let html = '<tr>' + days.map(d => `<th>${d}</th>`).join('') + '</tr>';
+      slots.forEach(s => {
+        html += `<tr><td class="time-col">${s.time}</td>`;
+        ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'].forEach(d => {
+          const c = s.classes[d];
+          if (c.t === 'free') html += `<td><div class="class-block free"><div class="class-name">Free</div></div></td>`;
+          else html += `<td onclick="showToast('🔔 Reminder set for ${c.n}!')"><div class="class-block ${c.t}"><div class="class-name">${c.n}</div>${c.r ? `<div class="class-room">${c.r}</div>` : ''}</div></td>`;
+        });
+        html += '</tr>';
+      });
+      table.innerHTML = html;
+      document.getElementById('today-classes').innerHTML = `
+    <div style="display:flex;gap:0.75rem;align-items:center;padding:0.6rem;background:var(--maroon-tint);border-radius:var(--radius-sm);margin-bottom:0.5rem;">
+      <span style="font-size:1.1rem;">📊</span>
+      <div style="flex:1;"><div style="font-weight:600;font-size:0.88rem;">Data Structures</div><div style="font-size:0.72rem;color:var(--text-soft);">9:00 AM · Room CS-101</div></div>
+      <button onclick="showToast('🔔 Reminder set!')" style="padding:0.3rem 0.7rem;background:var(--maroon);color:white;border:none;border-radius:20px;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Remind</button>
+    </div>
+    <div style="display:flex;gap:0.75rem;align-items:center;padding:0.6rem;background:#E8F4FF;border-radius:var(--radius-sm);margin-bottom:0.5rem;">
+      <span style="font-size:1.1rem;">🗄️</span>
+      <div style="flex:1;"><div style="font-weight:600;font-size:0.88rem;">DBMS</div><div style="font-size:0.72rem;color:var(--text-soft);">10:00 AM · Room CS-201</div></div>
+      <button onclick="showToast('🔔 Reminder set!')" style="padding:0.3rem 0.7rem;background:#1A5DAD;color:white;border:none;border-radius:20px;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Remind</button>
+    </div>
+    <div style="display:flex;gap:0.75rem;align-items:center;padding:0.6rem;background:#E8FFE8;border-radius:var(--radius-sm);">
+      <span style="font-size:1.1rem;">🌐</span>
+      <div style="flex:1;"><div style="font-weight:600;font-size:0.88rem;">Networks</div><div style="font-size:0.72rem;color:var(--text-soft);">12:00 PM · Room CS-401</div></div>
+      <button onclick="showToast('🔔 Reminder set!')" style="padding:0.3rem 0.7rem;background:#1A6B1A;color:white;border:none;border-radius:20px;font-size:0.72rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Remind</button>
+    </div>`;
+    }
+
+    function renderPolls() {
+      const g = document.getElementById('polls-grid');
+      if (!g) return;
+      g.innerHTML = pollsData.map((p, pi) => `
+    <div class="poll-card fade-in">
+      <div class="poll-question">${p.q}</div>
+      ${p.opts.map((o, oi) => {
+        const pct = Math.round((p.votes[oi] / p.total) * 100);
+        return `<div class="poll-option ${p.voted === oi ? 'voted' : ''}" onclick="votePoll(${pi},${oi})">
+          <div class="poll-fill" style="width:${p.voted >= 0 ? pct : 0}%"></div>
+          <span class="option-text">${o}</span>
+          ${p.voted >= 0 ? `<span class="option-pct">${pct}%</span>` : ''}
+        </div>`;
+      }).join('')}
+      <div class="poll-meta"><span>👤 ${p.creator}</span><span>🗳️ ${p.total} votes · ${p.time}</span></div>
+    </div>`).join('');
+    }
+
+    function renderConfessions() {
+      const g = document.getElementById('confessions-grid');
+      if (!g) return;
+      g.innerHTML = confessionsData.map((c, ci) => `
+    <div class="confession-card fade-in">
+      <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+        <div class="anon-avatar">${c.icon}</div>
+        <span class="confession-id">${c.id}</span>
+        <span class="tag-filter conf-${c.tag}">${c.tagLabel}</span>
+        <span class="confession-time">${c.time}</span>
+      </div>
+      <div class="confession-body">${c.text}</div>
+      <div style="display:flex;gap:0.75rem;">
+        <button class="reaction-btn" onclick="reactConf(this)">❤️ ${c.likes}</button>
+        <button class="reaction-btn" onclick="reactConf(this)">😂 ${c.relatable}</button>
+      </div>
+    </div>`).join('');
+    }
+
+    function renderLF() {
+      const g = document.getElementById('lf-grid');
+      if (!g) return;
+      g.innerHTML = lfData.map(item => `
+    <div class="lf-card fade-in">
+      <div style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+        <div class="lf-img">${item.icon}</div>
+        <div style="flex:1;">
+          <span class="lf-status status-${item.status}">${item.status === 'lost' ? '🔴' : item.status === 'found' ? '🟢' : '✅'} ${item.statusLabel}</span>
+          <div class="lf-title" style="margin-top:0.35rem;">${item.title}</div>
+        </div>
+      </div>
+      <div class="lf-desc">${item.desc}</div>
+      <div class="lf-location">📍 ${item.loc} · ${item.time}</div>
+      ${item.status !== 'claimed' ? `<button class="lf-contact-btn" onclick="showToast('📨 Contacting poster anonymously...')">📨 Contact Poster</button>` : '<div style="margin-top:0.75rem;text-align:center;font-size:0.78rem;color:#1A6B1A;font-weight:600;">✅ Item Claimed</div>'}
+    </div>`).join('');
+    }
+
+    // ── INTERACTIONS ──
+    function connectStudent(btn, name) {
+      if (btn.classList.contains('connected')) return;
+      btn.classList.add('connected'); btn.textContent = '✓ Connected';
+      showToast('🤝 Connected with ' + name + '!');
+    }
+    function downloadNote(btn, title) {
+      btn.textContent = '✓ Downloaded'; btn.style.background = 'var(--maroon)'; btn.style.color = 'white';
+      showToast('📥 Downloaded "' + title + '" · Contributor earned +5 pts!');
+    }
+    function joinActivity(btn) {
+      if (btn.classList.contains('joined')) return;
+      btn.classList.add('joined'); btn.textContent = '✓ Joined!';
+      showToast("🙌 You're in! See you there.");
+    }
+    function selectChat(el, name, initials, bg) {
+      document.querySelectorAll('.chat-item').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('chat-hdr-av').style.background = bg;
+      document.getElementById('chat-hdr-av').textContent = initials;
+      document.getElementById('chat-hdr-name').textContent = name;
+    }
+    function setChatMode(mode, btn) {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active'); chatMode = mode;
+      document.getElementById('anon-badge').style.display = mode === 'anon' ? 'block' : 'none';
+      showToast(mode === 'anon' ? '🕵️ Anonymous mode — identity hidden.' : '👤 Normal mode.');
+    }
+    function sendMessage() {
+      const input = document.getElementById('msg-input');
+      const text = input.value.trim();
+      if (!text) return;
+      const container = document.getElementById('messages-container');
+      const div = document.createElement('div');
+      div.className = 'msg sent';
+      div.innerHTML = `<div class="msg-bubble">${text}${chatMode === 'anon' ? ' 🕵️' : ''}</div><div class="msg-time">Just now</div>`;
+      container.appendChild(div);
+      container.scrollTop = container.scrollHeight;
+      input.value = '';
+      setTimeout(() => {
+        const replies = ['That sounds great! 🙌', 'Interesting, tell me more!', 'Sure, let\'s plan it!', '😄 Count me in!', 'Let\'s connect soon!'];
+        const reply = document.createElement('div');
+        reply.className = 'msg recv';
+        reply.innerHTML = `<div class="msg-bubble">${replies[Math.floor(Math.random() * replies.length)]}</div><div class="msg-time">Just now</div>`;
+        container.appendChild(reply);
+        container.scrollTop = container.scrollHeight;
+      }, 1200);
+    }
+    function selectPostType(btn, type) {
+      document.querySelectorAll('.type-select-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active'); currentPostType = type;
+    }
+    function submitPost() {
+      const text = document.getElementById('post-text').value.trim();
+      if (!text) { showToast('⚠️ Write something before posting!'); return; }
+      const typeMap = { canteen: '🍔 Canteen', study: '📖 Study', event: '🎉 Event', sport: '⚽ Sport', canon: '📢 Post' };
+      const userName = currentUser.name || 'You';
+      const userInit = currentUser.initials || '??';
+      activityData.unshift({ user: userName, initials: userInit, bg: 'var(--gold)', type: currentPostType || 'study', typeLabel: typeMap[currentPostType || 'study'], msg: text, time: 'Just now', joins: 0 });
+      renderActivity();
+      document.getElementById('post-text').value = '';
+      showToast('📢 Activity posted!');
+    }
+    function rsvpEvent(btn) {
+      const wasRsvped = btn.classList.contains('rsvped');
+      btn.classList.toggle('rsvped');
+      btn.textContent = wasRsvped ? 'RSVP' : '✓ Going';
+      showToast(wasRsvped ? 'Removed from your events.' : "🎉 You're going!");
+    }
+    function votePoll(pi, oi) {
+      if (pollsData[pi].voted >= 0) return;
+      pollsData[pi].voted = oi; pollsData[pi].votes[oi]++;
+      renderPolls(); showToast('🗳️ Vote recorded!');
+    }
+    function reactConf(btn) {
+      btn.classList.toggle('reacted');
+      showToast(btn.classList.contains('reacted') ? '❤️ Reaction added!' : 'Reaction removed.');
+    }
+    function joinRoom(btn, name) {
+      btn.textContent = '✓ Joined!'; btn.style.background = '#1A7A4A';
+      showToast('📖 Joined "' + name + '"! See you in the room.');
+    }
+    function setFilter(btn) {
+      btn.parentElement.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    // ── MODALS ──
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+    function addEvent() {
+      const name = document.getElementById('ev-name').value.trim();
+      const date = document.getElementById('ev-date').value;
+      const venue = document.getElementById('ev-venue').value.trim();
+      const cat = document.getElementById('ev-cat').value;
+      if (!name) { showToast('⚠️ Enter an event name'); return; }
+      const catMap = { tech: '🖥️ Tech', cultural: '🎭 Cultural', sports: '⚽ Sports', academic: '📚 Academic' };
+      const d = date ? new Date(date + 'T00:00:00') : new Date();
+      eventsData.unshift({ day: d.getDate(), month: d.toLocaleString('default', { month: 'short' }).toUpperCase(), title: name, venue: venue || 'TBD', cat, catLabel: catMap[cat], rsvp: false });
+      renderEvents(); closeModal('event-modal');
+      ['ev-name', 'ev-venue'].forEach(id => document.getElementById(id).value = '');
+      showToast('📅 Event "' + name + '" added!');
+    }
+
+    function createStudyRoom() {
+      const name = document.getElementById('room-name').value.trim();
+      const subj = document.getElementById('room-subj').value.trim();
+      const loc = document.getElementById('room-loc').value.trim();
+      const max = document.getElementById('room-max').value;
+      const branch = document.getElementById('room-branch').value;
+      if (!name) { showToast('⚠️ Enter a room name'); return; }
+      const icons = ['📚', '🔬', '💻', '📊', '⚡', '🤖'];
+      const bgs = ['#FFF3D0', '#E8F4FF', '#F0E8FF', '#E8FFE8', '#FFF0E0'];
+      studyRoomsData.unshift({ icon: icons[Math.floor(Math.random() * icons.length)], bg: bgs[Math.floor(Math.random() * bgs.length)], name, subject: subj || 'General', loc: loc || 'TBD', time: 'Now', branch, max: parseInt(max), members: [{ i: currentUser.initials || '??', bg: 'var(--gold)' }], live: true });
+      renderStudyRooms(); closeModal('study-modal');
+      ['room-name', 'room-subj', 'room-loc'].forEach(id => document.getElementById(id).value = '');
+      showToast('📖 Study room "' + name + '" created!');
+    }
+
+    function createPoll() {
+      const q = document.getElementById('poll-q').value.trim();
+      const o1 = document.getElementById('poll-opt-1').value.trim();
+      const o2 = document.getElementById('poll-opt-2').value.trim();
+      if (!q || !o1 || !o2) { showToast('⚠️ Add a question and at least 2 options'); return; }
+      const opts = [o1, o2, document.getElementById('poll-opt-3').value.trim(), document.getElementById('poll-opt-4').value.trim()].filter(Boolean);
+      pollsData.unshift({ q, opts, votes: opts.map(() => 0), total: 0, voted: -1, creator: currentUser.name || 'You', time: 'Just now' });
+      renderPolls(); closeModal('poll-modal');
+      ['poll-q', 'poll-opt-1', 'poll-opt-2', 'poll-opt-3', 'poll-opt-4'].forEach(id => document.getElementById(id).value = '');
+      showToast('📊 Poll launched!');
+    }
+
+    function postConfession() {
+      const text = document.getElementById('conf-text').value.trim();
+      const tag = document.getElementById('conf-tag').value;
+      if (!text) { showToast('⚠️ Write your confession first'); return; }
+      const tagMap = { academic: '📚 Academic', hostel: '🏠 Hostel', social: '💬 Social', rant: '😤 Rant' };
+      const icons = ['😅', '😂', '🤔', '😭', '🙈', '😤', '💭', '🎭'];
+      confNum++;
+      confessionsData.unshift({ id: 'Anon #' + confNum, icon: icons[Math.floor(Math.random() * icons.length)], tag, tagLabel: tagMap[tag], text, time: 'Just now', likes: 0, relatable: 0 });
+      renderConfessions(); closeModal('confession-modal');
+      document.getElementById('conf-text').value = '';
+      showToast('🎭 Posted anonymously! Your identity is safe.');
+    }
+
+    function postLF() {
+      const item = document.getElementById('lf-item').value.trim();
+      const desc = document.getElementById('lf-desc').value.trim();
+      const loc = document.getElementById('lf-loc').value.trim();
+      const status = document.getElementById('lf-status').value;
+      const cat = document.getElementById('lf-cat').value;
+      if (!item) { showToast('⚠️ Enter item name'); return; }
+      const icons = { Electronics: '📱', 'Books / Notes': '📔', 'Personal Items': '🎒', 'ID / Cards': '🪪', Clothing: '👕', Other: '📦' };
+      lfData.unshift({ icon: icons[cat] || '📦', status, statusLabel: status === 'lost' ? 'Lost' : 'Found', title: item, desc: desc || 'No description', loc: loc || 'Unknown', cat, time: 'Just now' });
+      renderLF(); closeModal('lf-modal');
+      ['lf-item', 'lf-desc', 'lf-loc'].forEach(id => document.getElementById(id).value = '');
+      showToast((status === 'lost' ? '🔴' : '🟢') + ' "' + item + '" posted!');
+    }
+
+    // ── TOAST ──
+    let toastTimer;
+    function showToast(msg) {
+      clearTimeout(toastTimer);
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+    }
   </script>
 </body>
+
 </html>
