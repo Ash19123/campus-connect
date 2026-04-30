@@ -4645,6 +4645,15 @@
       showToast((status === 'lost' ? '🔴' : '🟢') + ' "' + item + '" posted!');
     }
 
+        // ── TOAST ──
+    let toastTimer;
+    function showToast(msg) {
+      clearTimeout(toastTimer);
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+    }
+
   </script>
 </body>
 
