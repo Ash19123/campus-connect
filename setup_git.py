@@ -1,19 +1,11 @@
-#!/usr/bin/env python3
-"""
-setup_git.py — Campus Connect Git History Setup
-Run this from inside the campus-connect/ folder.
-Usage: python3 setup_git.py
-"""
-
 import subprocess
 import os
 import sys
 
 # ── CONFIG ──────────────────────────────────────────────────────────────────
-AUTHOR_NAME  = "Your Name"          # ← Change this
-AUTHOR_EMAIL = "you@example.com"    # ← Change this
-REMOTE_URL   = ""                   # ← Paste your GitHub repo URL here
-# e.g. REMOTE_URL = "https://github.com/youruser/campus-connect.git"
+AUTHOR_NAME  = "Aashu"          
+AUTHOR_EMAIL = "aasritha.dakshinyam@gmail.com"    
+REMOTE_URL   = "https://github.com/Ash19123/campus-connect.git"                   
 # ─────────────────────────────────────────────────────────────────────────────
 
 def run(cmd, env=None):
@@ -239,26 +231,26 @@ def main():
         git_commit(msg, date)
 
     print("\n" + "=" * 45)
-    print("✅  All commits created!")
+    print("All commits created!")
     run("git log --oneline")
 
     # ── Optional: push to GitHub ──
     if REMOTE_URL:
-        print(f"\n🚀  Pushing to GitHub: {REMOTE_URL}")
+        print(f"\nPushing to GitHub: {REMOTE_URL}")
         run(f"git remote add origin {REMOTE_URL}")
         result = run("git push -u origin main")
         if result.returncode == 0:
-            print("✅  Pushed successfully!")
+            print("Pushed successfully!")
         else:
-            print("❌  Push failed. Try manually:")
+            print("Push failed. Try manually:")
             print(f"    git remote add origin {REMOTE_URL}")
             print("    git push -u origin main")
     else:
-        print("\n📌  To push to GitHub, run:")
+        print("\nTo push to GitHub, run:")
         print("    git remote add origin https://github.com/YOUR_USER/campus-connect.git")
         print("    git push -u origin main")
 
-    print("\n🎉  Done! Your Campus Connect repo is ready.\n")
+    print("\nDone! Your Campus Connect repo is ready.\n")
 
 
 if __name__ == "__main__":
